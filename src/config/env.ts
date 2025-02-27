@@ -8,6 +8,12 @@ if (process.env.NODE_ENV === "test") {
 }
 
 const envSchema = z.object({
+  DB_USER: z.string().min(1, { message: "DB_USER is required" }),
+  DB_PASSWORD: z.string().min(1, { message: "DB_PASSWORD is required" }),
+  DB_NAME: z.string().min(1, { message: "DB_NAME is required" }),
+  DB_PORT: z.coerce.number().default(3333),
+  DB_HOST: z.string().min(1, { message: "DB_HOST is required" }),
+
   NODE_ENV: z.enum(["development", "test", "production"]).default("production"),
   PORT: z.coerce.number().default(3333),
 });
