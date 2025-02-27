@@ -21,3 +21,29 @@ pool.connect((err, client, release) => {
   release();
   console.log("Connect to PostgreSQL successfully");
 });
+
+type PostgresParam =
+  | number
+  | string
+  | boolean
+  | null
+  | Date
+  | (number | string | boolean | null)[];
+
+export async function query(text: string, params: PostgresParam[] = []) {
+  const start = Date.now();
+
+  try {
+    const result = await pool.query(text, params);
+    const duration = Date.now() - start;
+
+    if (env.NODE_ENV === "development") {
+      console.log("Query executed!", { text, duration, rows: result.rowCount });
+    }
+
+    return result;
+  } catch (error) {
+    console.log(`Error executing query: ${error}`);
+    throw error;
+  }
+}
