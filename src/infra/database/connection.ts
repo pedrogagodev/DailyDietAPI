@@ -2,7 +2,7 @@ import { env } from "@/config/env";
 
 import { Pool } from "pg";
 
-export const poll = new Pool({
+export const pool = new Pool({
   user: env.DB_USER,
   host: env.DB_HOST,
   database: env.DB_NAME,
@@ -13,7 +13,7 @@ export const poll = new Pool({
   connectionTimeoutMillis: 2000,
 });
 
-poll.connect((err, client, release) => {
+pool.connect((err, client, release) => {
   if (err) {
     console.error("Error connecting to PostgreSQL: ", err);
     return;
