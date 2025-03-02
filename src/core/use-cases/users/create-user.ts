@@ -1,10 +1,8 @@
 import type { User } from "@/core/entities/user";
-import type { UsersRepository } from "@/core/repositories/users-repository";
-
-interface CreateUserData {
-  name: string;
-  email: string;
-}
+import type {
+  UsersRepository,
+  CreateUserData,
+} from "@/core/repositories/users-repository";
 
 export class CreateUserUseCase {
   private usersRepository: UsersRepository;
