@@ -6,14 +6,14 @@ import type {
 import { query } from "../../infra/database/connection";
 
 export class MethodsUsersRepository implements UsersRepository {
-  async create({ name, email }: CreateUserData): Promise<User> {
+  async create({ name, email, password }: CreateUserData): Promise<User> {
     const result = await query(
       `
-        INSERT INTO users (name, email)
-        VALUES ($1, $2)
+        INSERT INTO users (name, email, password)
+        VALUES ($1, $2, $3)
         RETURNING *
         `,
-      [name, email]
+      [name, email, password]
     );
     return result.rows[0];
   }
