@@ -5,7 +5,7 @@ import { query } from "@/infra/database/connection";
 export class MethodsMealsRepository implements MealsRepository {
     async create({userId, name, description, isOnDiet}: CreateMealData): Promise<Meal> {
         const result = await query(`
-            INSERT INTO meals (userID, name, description, isOnDiet)
+            INSERT INTO meals (user_id, name, description, is_on_diet)
             VALUES ($1, $2, $3, $4)
             RETURNING *
             `,
