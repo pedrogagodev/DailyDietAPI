@@ -3,6 +3,7 @@ import type { User } from "../entities/user";
 export interface CreateUserData {
   name: string;
   email: string;
+  password: string;
 }
 
 export interface UsersRepository {
