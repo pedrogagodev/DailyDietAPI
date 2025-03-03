@@ -8,7 +8,7 @@ export async function usersRoutes(app: FastifyInstance) {
   const createUserUseCase = new CreateUserUseCase(usersRepository);
   const usersController = new UsersController(createUserUseCase);
 
-  app.post("/users", async (request, reply) => {
+  app.post("/register", async (request, reply) => {
     await usersController.create(request, reply);
   });
 }
