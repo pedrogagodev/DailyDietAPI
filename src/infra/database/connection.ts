@@ -1,8 +1,8 @@
 import { env } from "@/config/env";
 
-import { Pool } from "pg";
+import pg from "pg";
 
-export const pool = new Pool({
+export const pool = new pg.Pool({
   user: env.DB_USER,
   host: env.DB_HOST,
   database: env.DB_NAME,
