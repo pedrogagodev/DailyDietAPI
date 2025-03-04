@@ -39,11 +39,11 @@ export class CreateUserUseCase {
     if (checkIfUserExists) {
       throw new Error("Email already in use");
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const password_hash = await bcrypt.hash(password, 10);
     return this.usersRepository.create({
       name,
       email,
-      password: hashedPassword,
+      password_hash,
     });
   }
 }

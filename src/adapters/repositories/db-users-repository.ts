@@ -1,19 +1,19 @@
 import type { User } from "@/core/entities/user";
 import type {
-  CreateUserData,
+  CreateUserDataRepo,
   UsersRepository,
 } from "@/core/repositories/users-repository";
 import { query } from "../../infra/database/connection";
 
 export class MethodsUsersRepository implements UsersRepository {
-  async create({ name, email, password }: CreateUserData): Promise<User> {
+  async create({ name, email, password_hash }: CreateUserDataRepo): Promise<User> {
     const result = await query(
       `
-        INSERT INTO users (name, email, password)
+        INSERT INTO users (name, email, password_hash)
         VALUES ($1, $2, $3)
         RETURNING *
         `,
-      [name, email, password]
+      [name, email, password_hash]
     );
     return result.rows[0];
   }
