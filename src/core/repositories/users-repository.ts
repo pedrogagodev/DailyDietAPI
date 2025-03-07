@@ -6,6 +6,10 @@ export interface CreateUserData {
   password: string;
 }
 
+export interface AuthUserData {
+  email: string;
+  password: string;
+}
 export interface CreateUserDataRepo {
   name: string;
   email: string;
