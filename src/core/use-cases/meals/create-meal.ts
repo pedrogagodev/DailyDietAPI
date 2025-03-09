@@ -11,7 +11,7 @@ export class CreateMealUseCase {
     this.mealsRepository = mealsRepository;
   }
 
-  async create(data: CreateMealData): Promise<Meal> {
+  async execute(data: CreateMealData): Promise<Meal> {
     return this.mealsRepository.create(data);
   }
 }
