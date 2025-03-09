@@ -1,6 +1,6 @@
-import { UsersController } from "@/adapters/controllers/users-controller";
-import { MethodsUsersRepository } from "@/adapters/repositories/db-users-repository";
 import { CreateUserUseCase } from "@/core/use-cases/users/create-user";
+import { UsersController } from "@/http/controllers/users-controller";
+import { MethodsUsersRepository } from "@/repositories/db-users-repository";
 import type { FastifyInstance } from "fastify";
 
 export async function usersRoutes(app: FastifyInstance) {

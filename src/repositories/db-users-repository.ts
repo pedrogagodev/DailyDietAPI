@@ -3,10 +3,14 @@ import type {
   CreateUserDataRepo,
   UsersRepository,
 } from "@/core/repositories/users-repository";
-import { query } from "../../infra/database/connection";
+import { query } from "../infra/database/connection";
 
 export class MethodsUsersRepository implements UsersRepository {
-  async create({ name, email, password_hash }: CreateUserDataRepo): Promise<User> {
+  async create({
+    name,
+    email,
+    password_hash,
+  }: CreateUserDataRepo): Promise<User> {
     const result = await query(
       `
         INSERT INTO users (name, email, password_hash)
