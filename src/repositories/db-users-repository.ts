@@ -1,6 +1,6 @@
 import type { User } from "@/core/entities/user";
 import type {
-  CreateUserDataRepo,
+  RegisterUserDataRepo,
   UsersRepository,
 } from "@/core/repositories/users-repository";
 import { query } from "../infra/database/connection";
@@ -10,7 +10,7 @@ export class MethodsUsersRepository implements UsersRepository {
     name,
     email,
     password_hash,
-  }: CreateUserDataRepo): Promise<User> {
+  }: RegisterUserDataRepo): Promise<User> {
     const result = await query(
       `
         INSERT INTO users (name, email, password_hash)
