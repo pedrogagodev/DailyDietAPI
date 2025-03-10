@@ -2,6 +2,7 @@ import type {
   AuthUserData,
   UsersRepository,
 } from "@/core/repositories/users-repository";
+import { InvalidCredentialsError } from "@/errors/invalid-credentials-error";
 import bcrypt from "bcrypt";
 
 export class AuthenticateUserCase {
@@ -14,12 +15,12 @@ export class AuthenticateUserCase {
   async auth({ email, password }: AuthUserData) {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) {
-      throw new Error("User not found");
+      throw new InvalidCredentialsError();
     }
 
-    const isPasswordValid = bcrypt.compare(password, user.password)
+    const isPasswordValid = bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-        throw new Error("Invalid password")
+      throw new InvalidCredentialsError();
     }
-  } 
+  }
 }
