@@ -1,4 +1,4 @@
-import { makeCreateMealUseCase } from "@/core/use-cases/factories/make-create-meal-use-case";
+import { makeCreateMealUseCase } from "@/use-cases/factories/make-create-meal-use-case";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 interface CreateMealRequest {
