@@ -6,22 +6,32 @@ import type {
 import { UserAlreadyExistsError } from "@/errors/user-already-exists-error";
 import bcrypt from "bcrypt";
 
+interface RegisterUseCaseResponse {
+  user: User;
+}
+
 export class RegisterUseCase {
   private usersRepository: UsersRepository;
 
   constructor(usersRepository: UsersRepository) {
     this.usersRepository = usersRepository;
   }
-  async execute({ name, email, password }: RegisterUserData): Promise<User> {
+  async execute({
+    name,
+    email,
+    password,
+  }: RegisterUserData): Promise<RegisterUseCaseResponse> {
     const checkIfUserExists = await this.usersRepository.findByEmail(email);
     if (checkIfUserExists) {
       throw new UserAlreadyExistsError();
     }
     const password_hash = await bcrypt.hash(password, 10);
-    return this.usersRepository.create({
+    const user = await this.usersRepository.create({
       name,
       email,
       password_hash,
     });
+
+    return { user };
   }
 }
