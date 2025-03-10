@@ -4,6 +4,10 @@ import type {
   CreateMealData,
 } from "@/core/repositories/meals-repository";
 
+interface CreateMealUseCaseResponse {
+  meal: Meal;
+}
+
 export class CreateMealUseCase {
   private mealsRepository: MealsRepository;
 
@@ -11,7 +15,19 @@ export class CreateMealUseCase {
     this.mealsRepository = mealsRepository;
   }
 
-  async execute(data: CreateMealData): Promise<Meal> {
-    return this.mealsRepository.create(data);
+  async execute({
+    name,
+    isOnDiet,
+    userId,
+    description,
+  }: CreateMealData): Promise<CreateMealUseCaseResponse> {
+    const meal = await this.mealsRepository.create({
+      name,
+      isOnDiet,
+      userId,
+      description,
+    });
+
+    return { meal };
   }
 }
