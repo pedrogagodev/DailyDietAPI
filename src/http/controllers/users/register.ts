@@ -1,4 +1,5 @@
 import { makeRegisterUseCase } from "@/core/use-cases/factories/make-register-use-case";
+import { UserAlreadyExistsError } from "@/errors/user-already-exists-error";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
@@ -23,9 +24,12 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       email,
       password,
     });
-  } catch (error) {
-    reply.status(400).send({ error: (error as Error).message });
-    throw error;
+  } catch (err) {
+    if (err instanceof UserAlreadyExistsError) {
+      reply.status(409).send({ message: err.message });
+    }
+
+    throw err;
   }
 
   return reply.status(201).send();

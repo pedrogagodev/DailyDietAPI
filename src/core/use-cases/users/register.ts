@@ -3,6 +3,7 @@ import type {
   RegisterUserData,
   UsersRepository,
 } from "@/core/repositories/users-repository";
+import { UserAlreadyExistsError } from "@/errors/user-already-exists-error";
 import bcrypt from "bcrypt";
 
 export class RegisterUseCase {
@@ -14,7 +15,7 @@ export class RegisterUseCase {
   async execute({ name, email, password }: RegisterUserData): Promise<User> {
     const checkIfUserExists = await this.usersRepository.findByEmail(email);
     if (checkIfUserExists) {
-      throw new Error("Email already in use");
+      throw new UserAlreadyExistsError();
     }
     const password_hash = await bcrypt.hash(password, 10);
     return this.usersRepository.create({
