@@ -12,7 +12,7 @@ export class AuthenticateUseCase {
     this.usersRepository = usersRepository;
   }
 
-  async authenticate({ email, password }: AuthUserData) {
+  async execute({ email, password }: AuthUserData) {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) {
       throw new InvalidCredentialsError();
@@ -22,5 +22,7 @@ export class AuthenticateUseCase {
     if (!isPasswordValid) {
       throw new InvalidCredentialsError();
     }
+
+    return { user };
   }
 }
