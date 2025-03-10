@@ -5,7 +5,7 @@ import type {
 import { InvalidCredentialsError } from "@/errors/invalid-credentials-error";
 import bcrypt from "bcrypt";
 
-export class AuthenticateUserCase {
+export class AuthenticateUseCase {
   private usersRepository: UsersRepository;
 
   constructor(usersRepository: UsersRepository) {
