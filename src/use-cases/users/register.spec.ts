@@ -27,7 +27,7 @@ describe("Register Use Case", () => {
       password: "JonDoe123",
     });
 
-    const isPasswordHashed = await bcrypt.compare("JonDoe123", user.password);
+    const isPasswordHashed = await bcrypt.compare("JonDoe123", user.password_hash);
 
     expect(isPasswordHashed).toBe(true);
   });
