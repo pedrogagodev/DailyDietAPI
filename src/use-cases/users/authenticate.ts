@@ -12,7 +12,7 @@ export class AuthenticateUserCase {
     this.usersRepository = usersRepository;
   }
 
-  async auth({ email, password }: AuthUserData) {
+  async authenticate({ email, password }: AuthUserData) {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) {
       throw new InvalidCredentialsError();
