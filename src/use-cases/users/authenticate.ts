@@ -1,9 +1,14 @@
+import type { User } from "@/core/entities/user";
 import type {
   AuthUserData,
   UsersRepository,
 } from "@/core/repositories/users-repository";
 import { InvalidCredentialsError } from "@/errors/invalid-credentials-error";
 import bcrypt from "bcrypt";
+
+interface AuthenticateUseCaseResponse {
+  user: User;
+}
 
 export class AuthenticateUseCase {
   private usersRepository: UsersRepository;
@@ -12,13 +17,13 @@ export class AuthenticateUseCase {
     this.usersRepository = usersRepository;
   }
 
-  async execute({ email, password }: AuthUserData) {
+  async execute({ email, password }: AuthUserData): Promise<AuthenticateUseCaseResponse> {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) {
       throw new InvalidCredentialsError();
     }
 
-    const isPasswordValid = bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
     if (!isPasswordValid) {
       throw new InvalidCredentialsError();
     }
