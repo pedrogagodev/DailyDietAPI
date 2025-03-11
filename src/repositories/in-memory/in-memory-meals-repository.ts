@@ -26,7 +26,8 @@ export class InMemoryMealsRepository implements MealsRepository {
   }
 
   findById(id: string): Promise<Meal | null> {
-    throw new Error("Method not implemented.");
+    const meal = this.items.find(meal => meal.id === id);
+    return Promise.resolve(meal || null);
   }
   findByUserIdAndId(userId: string, id: string): Promise<Meal | null> {
     throw new Error("Method not implemented.");
@@ -34,8 +35,19 @@ export class InMemoryMealsRepository implements MealsRepository {
   listByUserId(userId: string): Promise<Meal[]> {
     throw new Error("Method not implemented.");
   }
-  update(id: string, data: UpdateMealData): Promise<Meal> {
-    throw new Error("Method not implemented.");
+  async update(id: string, data: UpdateMealData): Promise<Meal> {
+    let meal = await this.findById(id);
+    if (!meal) {
+      throw new Error("Meal not found");
+    }
+    meal = {
+      ...meal,
+      name: data.name ?? meal.name,
+      description: data.description ?? meal.description,
+      isOnDiet: data.isOnDiet ?? meal.isOnDiet,
+      updatedAt: new Date(),
+    };
+    return Promise.resolve(meal);
   }
   delete(id: string): void {
     throw new Error("Method not implemented.");
