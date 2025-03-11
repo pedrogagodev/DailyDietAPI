@@ -12,7 +12,7 @@ export class InMemoryUsersRepository implements UsersRepository {
       id: "user-1",
       name: data.name,
       email: data.email,
-      password: data.password_hash,
+      password_hash: data.password_hash,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
