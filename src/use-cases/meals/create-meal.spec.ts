@@ -1,12 +1,17 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { CreateMealUseCase } from "./create-meal";
 import { InMemoryMealsRepository } from "@/repositories/in-memory/in-memory-meals-repository";
 
-describe("Create Meal Use Case", () => {
-  it("should be able to create meal", async () => {
-    const mealsRepository = new InMemoryMealsRepository();
-    const createMealCase = new CreateMealUseCase(mealsRepository);
+let mealsRepository: InMemoryMealsRepository;
+let createMealCase: CreateMealUseCase;
 
+describe("Create Meal Use Case", () => {
+  beforeEach(() => {
+    mealsRepository = new InMemoryMealsRepository();
+    createMealCase = new CreateMealUseCase(mealsRepository);
+  });
+
+  it("should be able to create meal", async () => {
     const { meal } = await createMealCase.execute({
       name: "Bread with eggs",
       isOnDiet: true,
