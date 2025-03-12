@@ -1,7 +1,6 @@
 import { InMemoryMealsRepository } from "@/repositories/in-memory/in-memory-meals-repository";
 import { beforeEach, describe, expect, it } from "vitest";
 import { CreateMealUseCase } from "./create-meal";
-import { getTotalMealsNumberUseCase } from "./get-total-meals-number";
 import { getMealsOnDietNumberUseCase } from "./get-meals-on-diet-number";
 
 let mealsRepository: InMemoryMealsRepository;
