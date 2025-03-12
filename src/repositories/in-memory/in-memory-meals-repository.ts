@@ -69,14 +69,38 @@ export class InMemoryMealsRepository implements MealsRepository {
     return Promise.resolve(totalMealsNumber);
   }
   countOnDietByUserId(userId: string): Promise<number> {
-    const mealsOnDietNumber = this.items.filter(meal => meal.userId === userId && meal.isOnDiet).length;
+    const mealsOnDietNumber = this.items.filter(
+      meal => meal.userId === userId && meal.isOnDiet
+    ).length;
     return Promise.resolve(mealsOnDietNumber);
   }
   countOffDietByUserId(userId: string): Promise<number> {
-    const mealsOffDietNumber = this.items.filter(meal => meal.userId === userId && !meal.isOnDiet).length;
+    const mealsOffDietNumber = this.items.filter(
+      meal => meal.userId === userId && !meal.isOnDiet
+    ).length;
     return Promise.resolve(mealsOffDietNumber);
   }
   getLongestOnDietSequence(userId: string): Promise<number> {
-    throw new Error("Method not implemented.");
+    const longestOnDietSequence = this.items.reduce(
+      (acc, meal) => {
+        if (meal.userId !== userId) {
+          return acc;
+        }
+
+        if (meal.isOnDiet) {
+          acc.currentSequence += 1;
+          acc.longestSequence = Math.max(
+            acc.currentSequence,
+            acc.longestSequence
+          );
+        } else {
+          acc.currentSequence = 0;
+        }
+        return acc;
+      },
+      { currentSequence: 0, longestSequence: 0 }
+    ).longestSequence;
+
+    return Promise.resolve(longestOnDietSequence);
   }
 }
