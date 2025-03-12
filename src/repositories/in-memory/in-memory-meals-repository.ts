@@ -33,7 +33,8 @@ export class InMemoryMealsRepository implements MealsRepository {
     throw new Error("Method not implemented.");
   }
   listByUserId(userId: string): Promise<Meal[]> {
-    throw new Error("Method not implemented.");
+    const meals = this.items.filter(meal => meal.userId === userId);
+    return Promise.resolve(meals);
   }
   async update(id: string, data: UpdateMealData): Promise<Meal> {
     let meal = await this.findById(id);
