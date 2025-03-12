@@ -3,6 +3,7 @@ import type {
   MealsRepository,
   UpdateMealData,
 } from "@/core/repositories/meals-repository";
+import { MealNotFoundError } from "@/errors/meal-not-found";
 
 interface UpdateMealUseCaseRequest {
   id: string;
@@ -24,6 +25,12 @@ export class UpdateMealUseCase {
     id,
     data,
   }: UpdateMealUseCaseRequest): Promise<UpdateMealUseCaseResponse> {
+    const checkIfMealExists = await this.mealsRepository.findById(id);
+    
+    if (!checkIfMealExists) {
+      throw new MealNotFoundError();
+    }
+
     const meal = await this.mealsRepository.update(id, data);
 
     return { meal };
