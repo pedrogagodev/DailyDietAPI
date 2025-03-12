@@ -4,7 +4,7 @@ interface getLongestOnDietSequenceUseCaseRequest {
   userId: string;
 }
 
-export class getLongestOnDietSequenceUseCase {
+export class GetLongestOnDietSequenceUseCase {
   private mealsRepository: MealsRepository;
 
   constructor(mealsRepository: MealsRepository) {
