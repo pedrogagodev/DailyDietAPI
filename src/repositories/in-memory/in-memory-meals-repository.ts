@@ -30,7 +30,8 @@ export class InMemoryMealsRepository implements MealsRepository {
     return Promise.resolve(meal || null);
   }
   findByUserIdAndId(userId: string, id: string): Promise<Meal | null> {
-    throw new Error("Method not implemented.");
+    const meal = this.items.find(meal => meal.userId === userId && meal.id === id);
+    return Promise.resolve(meal || null);
   }
   listByUserId(userId: string): Promise<Meal[]> {
     const meals = this.items.filter(meal => meal.userId === userId);
