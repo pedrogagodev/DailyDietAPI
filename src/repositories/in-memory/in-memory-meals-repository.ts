@@ -69,7 +69,8 @@ export class InMemoryMealsRepository implements MealsRepository {
     return Promise.resolve(totalMealsNumber);
   }
   countOnDietByUserId(userId: string): Promise<number> {
-    throw new Error("Method not implemented.");
+    const mealsOnDietNumber = this.items.filter(meal => meal.userId === userId && meal.isOnDiet).length;
+    return Promise.resolve(mealsOnDietNumber);
   }
   countOffDietByUserId(userId: string): Promise<number> {
     throw new Error("Method not implemented.");
