@@ -30,7 +30,9 @@ export class InMemoryMealsRepository implements MealsRepository {
     return Promise.resolve(meal || null);
   }
   findByUserIdAndId(userId: string, id: string): Promise<Meal | null> {
-    const meal = this.items.find(meal => meal.userId === userId && meal.id === id);
+    const meal = this.items.find(
+      meal => meal.userId === userId && meal.id === id
+    );
     return Promise.resolve(meal || null);
   }
   listByUserId(userId: string): Promise<Meal[]> {
@@ -61,7 +63,10 @@ export class InMemoryMealsRepository implements MealsRepository {
     this.items = this.items.filter(meal => meal.id !== id);
   }
   countByUserId(userId: string): Promise<number> {
-    throw new Error("Method not implemented.");
+    const totalMealsNumber = this.items.filter(
+      meal => meal.userId === userId
+    ).length;
+    return Promise.resolve(totalMealsNumber);
   }
   countOnDietByUserId(userId: string): Promise<number> {
     throw new Error("Method not implemented.");
