@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { UpdateMealUseCase } from "./update-meal";
 import { CreateMealUseCase } from "./create-meal";
 import { InMemoryMealsRepository } from "@/repositories/in-memory/in-memory-meals-repository";
+import { MealNotFoundError } from "@/errors/meal-not-found";
 
 let mealsRepository: InMemoryMealsRepository;
 let updateMealCase: UpdateMealUseCase;
@@ -43,17 +44,34 @@ describe("Update Meal Use Case", () => {
       userId: "user-1",
       description: "A simple breakfast",
     });
-  
+
     const response = await updateMealCase.execute({
       id: createdMeal.meal.id,
       data: {
         name: "Updated Bread with eggs",
       },
     });
-  
+
     expect(response.meal.name).toEqual("Updated Bread with eggs");
     expect(response.meal.description).toEqual("A simple breakfast");
     expect(response.meal.isOnDiet).toBe(true);
   });
-  
+
+  it("should not to able to update a meal with the wrong id", async () => {
+    await createMealCase.execute({
+      name: "Bread with eggs",
+      isOnDiet: true,
+      userId: "user-1",
+      description: "A simple breakfast",
+    });
+
+    await expect(() =>
+      updateMealCase.execute({
+        id: "Any id",
+        data: {
+          name: "Updated Bread with eggs",
+        },
+      })
+    ).rejects.instanceOf(MealNotFoundError);
+  });
 });
