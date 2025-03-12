@@ -1,4 +1,3 @@
-import { MealNotFoundError } from "@/errors/meal-not-found";
 import { InMemoryMealsRepository } from "@/repositories/in-memory/in-memory-meals-repository";
 import { beforeEach, describe, expect, it } from "vitest";
 import { CreateMealUseCase } from "./create-meal";
