@@ -49,8 +49,14 @@ export class InMemoryMealsRepository implements MealsRepository {
     };
     return Promise.resolve(meal);
   }
-  delete(id: string): void {
-    throw new Error("Method not implemented.");
+  async delete(id: string): Promise<void> {
+    const meal = await this.findById(id);
+
+    if (!meal) {
+      throw new Error("Meal not found");
+    }
+
+    this.items = this.items.filter(meal => meal.id !== id);
   }
   countByUserId(userId: string): Promise<number> {
     throw new Error("Method not implemented.");
