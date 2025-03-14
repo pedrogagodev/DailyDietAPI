@@ -1,6 +1,7 @@
 import { createMeal } from "@/http/controllers/meals/create-meal";
 import { deleteMeal } from "@/http/controllers/meals/delete-meal";
 import { getMealInfo } from "@/http/controllers/meals/get-meal-info";
+import { getMealsOnDietNumber } from "@/http/controllers/meals/get-meals-on-diet-number";
 import { getTotalMealsNumber } from "@/http/controllers/meals/get-total-meals-number";
 import { listMeals } from "@/http/controllers/meals/list-meals";
 import { updateMeal } from "@/http/controllers/meals/update-meal";
@@ -15,6 +16,7 @@ export async function mealsRoutes(app: FastifyInstance) {
 
   app.get("/me/:userId/meals", listMeals);
   app.get("/me/:userId/meals/total", getTotalMealsNumber);
+  app.get("/me/:userId/meals/on-diet", getMealsOnDietNumber);
   app.get("/meals/:mealId", getMealInfo);
 
   app.put("/meals/:mealId", updateMeal);
