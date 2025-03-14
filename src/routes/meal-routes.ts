@@ -1,5 +1,6 @@
 import { createMeal } from "@/http/controllers/meals/create-meal";
 import { deleteMeal } from "@/http/controllers/meals/delete-meal";
+import { getLongestOnDietSequence } from "@/http/controllers/meals/get-longest-on-diet-sequence";
 import { getMealInfo } from "@/http/controllers/meals/get-meal-info";
 import { getMealsOffDietNumber } from "@/http/controllers/meals/get-meals-off-diet-number";
 import { getMealsOnDietNumber } from "@/http/controllers/meals/get-meals-on-diet-number";
@@ -19,6 +20,7 @@ export async function mealsRoutes(app: FastifyInstance) {
   app.get("/me/:userId/meals/total", getTotalMealsNumber);
   app.get("/me/:userId/meals/on-diet", getMealsOnDietNumber);
   app.get("/me/:userId/meals/off-diet", getMealsOffDietNumber);
+  app.get("/me/:userId/meals/longest-on-diet-sequence", getLongestOnDietSequence);
   app.get("/meals/:mealId", getMealInfo);
 
   app.put("/meals/:mealId", updateMeal);
