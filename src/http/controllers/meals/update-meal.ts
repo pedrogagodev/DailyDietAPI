@@ -16,10 +16,10 @@ export async function updateMeal(request: FastifyRequest, reply: FastifyReply) {
   });
 
   const updateMealQuerySchema = z.object({
-    id: z.string().min(1, { message: "Please, provide a meal id" }),
+    mealId: z.string().min(1, { message: "Please, provide a meal id" }),
   });
 
-  const { id } = updateMealQuerySchema.parse(request.query);
+  const { mealId } = updateMealQuerySchema.parse(request.params);
   const { name, description, isOnDiet } = updateMealBodySchema.parse(
     request.body
   );
@@ -27,7 +27,7 @@ export async function updateMeal(request: FastifyRequest, reply: FastifyReply) {
     const updateMealUseCase = makeUpdateMealUseCase();
 
     const { meal } = await updateMealUseCase.execute({
-      id,
+      id: mealId,
       data: {
         name,
         description,

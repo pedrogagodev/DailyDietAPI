@@ -7,7 +7,7 @@ export async function listMeals(request: FastifyRequest, reply: FastifyReply) {
     userId: z.string().min(1, { message: "Please, provide a user id" }),
   });
 
-  const { userId } = listMealsSchema.parse(request.query);
+  const { userId } = listMealsSchema.parse(request.params);
   try {
     const listMealsUseCase = makeListMealsUseCase();
 
