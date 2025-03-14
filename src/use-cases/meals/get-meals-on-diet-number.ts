@@ -4,7 +4,7 @@ interface getMealsOnDietNumberUseCaseRequest {
   userId: string;
 }
 
-export class getMealsOnDietNumberUseCase {
+export class GetMealsOnDietNumberUseCase {
   private mealsRepository: MealsRepository;
 
   constructor(mealsRepository: MealsRepository) {

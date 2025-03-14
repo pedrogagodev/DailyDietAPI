@@ -1,17 +1,17 @@
 import { InMemoryMealsRepository } from "@/repositories/in-memory/in-memory-meals-repository";
 import { beforeEach, describe, expect, it } from "vitest";
 import { CreateMealUseCase } from "./create-meal";
-import { getMealsOnDietNumberUseCase } from "./get-meals-on-diet-number";
+import { GetMealsOnDietNumberUseCase } from "./get-meals-on-diet-number";
 
 let mealsRepository: InMemoryMealsRepository;
 let createMealCase: CreateMealUseCase;
-let getMealsOnDietNumberCase: getMealsOnDietNumberUseCase;
+let getMealsOnDietNumberCase: GetMealsOnDietNumberUseCase;
 
 describe("Get Total Meals On Diet Number Use Case", () => {
   beforeEach(() => {
     mealsRepository = new InMemoryMealsRepository();
     createMealCase = new CreateMealUseCase(mealsRepository);
-    getMealsOnDietNumberCase = new getMealsOnDietNumberUseCase(mealsRepository);
+    getMealsOnDietNumberCase = new GetMealsOnDietNumberUseCase(mealsRepository);
   });
 
   it("should be able to get total meals on diet number", async () => {

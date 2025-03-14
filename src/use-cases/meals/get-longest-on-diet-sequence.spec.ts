@@ -1,17 +1,17 @@
 import { InMemoryMealsRepository } from "@/repositories/in-memory/in-memory-meals-repository";
 import { beforeEach, describe, expect, it } from "vitest";
 import { CreateMealUseCase } from "./create-meal";
-import { getLongestOnDietSequenceUseCase } from "./get-longest-on-diet-sequence";
+import { GetLongestOnDietSequenceUseCase } from "./get-longest-on-diet-sequence";
 
 let mealsRepository: InMemoryMealsRepository;
 let createMealCase: CreateMealUseCase;
-let getLongestOnDietSequenceCase: getLongestOnDietSequenceUseCase;
+let getLongestOnDietSequenceCase: GetLongestOnDietSequenceUseCase;
 
 describe("Get Longest Sequence On Diet Use Case", () => {
   beforeEach(() => {
     mealsRepository = new InMemoryMealsRepository();
     createMealCase = new CreateMealUseCase(mealsRepository);
-    getLongestOnDietSequenceCase = new getLongestOnDietSequenceUseCase(
+    getLongestOnDietSequenceCase = new GetLongestOnDietSequenceUseCase(
       mealsRepository
     );
   });
