@@ -1,10 +1,12 @@
 {
   "name": "dailydietapi",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "build/server.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "start:dev": "tsx watch src/server.ts",
+    "start:prod": "node build/server.js",
+    "build": "tsup src --out-dir build",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
