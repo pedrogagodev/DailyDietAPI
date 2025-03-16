@@ -19,7 +19,7 @@ export interface MealsRepository {
   findByUserIdAndId(userId: string, id: string): Promise<Meal | null>;
   listByUserId(userId: string): Promise<Meal[]>;
   update(id: string, data: UpdateMealData): Promise<Meal>;
-  delete(id: string): void;
+  delete(id: string): Promise<void>;
   countByUserId(userId: string): Promise<number>;
   countOnDietByUserId(userId: string): Promise<number>;
   countOffDietByUserId(userId: string): Promise<number>;

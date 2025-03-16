@@ -71,8 +71,8 @@ export class MethodsMealsRepository implements MealsRepository {
 
     return result.rows[0];
   }
-  delete(id: string): void {
-    query(
+  async delete(id: string): Promise<void> {
+    await query(
       `
             DELETE FROM meals
             WHERE id = $1

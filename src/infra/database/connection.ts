@@ -1,13 +1,13 @@
 import { env } from "@/config/env";
-
 import pg from "pg";
 
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL environment variable is required");
+}
+
+// Configuração do pool de conexões
 export const pool = new pg.Pool({
-  user: env.DB_USER,
-  host: env.DB_HOST,
-  database: env.DB_NAME,
-  password: env.DB_PASSWORD,
-  port: env.DB_PORT,
+  connectionString: process.env.DATABASE_URL,
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
@@ -32,18 +32,30 @@ type PostgresParam =
 
 export async function query(text: string, params: PostgresParam[] = []) {
   const start = Date.now();
-
+  const client = await pool.connect();
   try {
-    const result = await pool.query(text, params);
+    const url = new URL(process.env.DATABASE_URL as string);
+    const schema = url.searchParams.get("schema") || "public";
+    await client.query(`SET search_path TO "${schema}"`);
+
+    const result = await client.query(text, params);
     const duration = Date.now() - start;
 
     if (env.NODE_ENV === "development") {
       console.log("Query executed!", { text, duration, rows: result.rowCount });
     }
-
     return result;
   } catch (error) {
-    console.log(`Error executing query: ${error}`);
+    console.error(`Error executing query: ${error}`);
     throw error;
+  } finally {
+    client.release();
   }
 }
+
+pool.on("connect", async client => {
+  const url = new URL(process.env.DATABASE_URL as string);
+  const schema = url.searchParams.get("schema") || "public";
+  await client.query(`SET search_path TO "${schema}"`);
+  console.log("Connected to PostgreSQL with schema:", schema);
+});

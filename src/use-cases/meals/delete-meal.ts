@@ -18,6 +18,6 @@ export class DeleteMealUseCase {
       throw new MealNotFoundError();
     }
 
-    this.mealsRepository.delete(id);
+    await this.mealsRepository.delete(id);
   }
 }

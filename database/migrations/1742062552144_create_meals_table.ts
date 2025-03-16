@@ -1,13 +1,13 @@
 import type { ColumnDefinitions, MigrationBuilder } from "node-pg-migrate";
 
-export const shorthands: ColumnDefinitions | undefined = undefined;
+const shorthands: ColumnDefinitions | undefined = undefined;
 
-export async function up(pgm: MigrationBuilder): Promise<void> {
+export const up = async (pgm: MigrationBuilder): Promise<void> => {
   pgm.createTable("meals", {
     id: {
       type: "uuid",
       primaryKey: true,
-      default: pgm.func("uuid_generate_v4()"),
+      default: pgm.func("public.uuid_generate_v4()"),
     },
     user_id: {
       type: "uuid",
@@ -36,6 +36,6 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
   });
 }
 
-export async function down(pgm: MigrationBuilder): Promise<void> {
+export const down = async (pgm: MigrationBuilder): Promise<void> => {
   pgm.dropTable("meals");
-}
+};

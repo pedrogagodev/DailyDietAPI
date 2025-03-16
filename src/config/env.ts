@@ -18,6 +18,7 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
 
   JWT_SECRET: z.string().min(1, { message: "JWT_SECRET is required" }),
+  DATABASE_URL: z.string().optional(),
 });
 
 const _env = envSchema.safeParse(process.env);
