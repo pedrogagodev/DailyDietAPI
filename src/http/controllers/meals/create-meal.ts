@@ -12,7 +12,7 @@ interface CreateMealRequest {
 export async function createMeal(request: FastifyRequest, reply: FastifyReply) {
   const createMealSchema = z.object({
     name: z.string().min(1, { message: "Please, provide a meal name" }),
-    userId: z.string().min(1, { message: "Please, provide a user id" }),
+    userId: z.string().uuid({ message: "Invalid user id." }),
     description: z.string().nullable(),
     isOnDiet: z.boolean({
       message: "Please, provide a valid value for isOnDiet",
@@ -22,18 +22,15 @@ export async function createMeal(request: FastifyRequest, reply: FastifyReply) {
   const { name, userId, description, isOnDiet } = createMealSchema.parse(
     request.body
   );
-  try {
-    const createMealUseCase = makeCreateMealUseCase();
 
-    const data = await createMealUseCase.execute({
-      userId,
-      name,
-      description,
-      isOnDiet,
-    });
-    return reply.status(201).send({ data });
-  } catch (error) {
-    reply.status(400).send({ error: (error as Error).message });
-    throw error;
-  }
+  const createMealUseCase = makeCreateMealUseCase();
+
+  const data = await createMealUseCase.execute({
+    userId,
+    name,
+    description,
+    isOnDiet,
+  });
+
+  return reply.status(201).send({ data });
 }
