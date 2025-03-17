@@ -25,11 +25,15 @@ export async function createMeal(request: FastifyRequest, reply: FastifyReply) {
   try {
     const createMealUseCase = makeCreateMealUseCase();
 
-    await createMealUseCase.execute({ userId, name, description, isOnDiet });
+    const data = await createMealUseCase.execute({
+      userId,
+      name,
+      description,
+      isOnDiet,
+    });
+    return reply.status(201).send({ data });
   } catch (error) {
     reply.status(400).send({ error: (error as Error).message });
     throw error;
   }
-
-  return reply.status(201).send();
 }
