@@ -1,0 +1,109 @@
+name: CI Backend
+
+on: [pull_request]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_USER: test_user
+      DB_PASSWORD: test_pass
+      DB_NAME: test_db
+      DATABASE_URL: postgres://test_user:test_pass@localhost:5432/test_db
+      PORT: 3333
+      NODE_ENV: test
+      JWT_SECRET: test_jwt_secret
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install backend dependencies
+        run: |
+          npm install
+
+      - name: Run migrations
+        run: |
+          npm run migrate:up
+
+      - name: Run backend unit tests
+        run: |
+          npm run test
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_USER: test_user
+      DB_PASSWORD: test_pass
+      DB_NAME: test_db
+      DATABASE_URL: postgres://test_user:test_pass@localhost:5432/test_db
+      PORT: 3333
+      NODE_ENV: test
+      JWT_SECRET: test_jwt_secret
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - name: Install backend dependencies
+        run: |
+          npm install
+
+      - name: Set up test environment
+        run: |
+          npm run pretest:e2e
+
+      - name: Run migrations
+        run: |
+          npm run migrate:up
+
+      - name: Run backend E2E tests
+        run: |
+          npm run start:dev & 
+          sleep 5           
+          npm run test:e2e
