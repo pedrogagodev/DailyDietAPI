@@ -1,5 +1,5 @@
 export class MealNotFoundError extends Error {
-    constructor() {
-      super('Meal not found.')
-    }
+  constructor(message = "Meal not found.") {
+    super(message);
   }
+}

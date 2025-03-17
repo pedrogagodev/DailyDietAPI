@@ -89,7 +89,7 @@ export class MethodsMealsRepository implements MealsRepository {
       [userId]
     );
 
-    return result.rows[0];
+    return Number(result.rows[0].count);
   }
   async countOnDietByUserId(userId: string): Promise<number> {
     const result = await query(
@@ -100,7 +100,7 @@ export class MethodsMealsRepository implements MealsRepository {
       [userId]
     );
 
-    return result.rows[0];
+    return Number(result.rows[0].count);
   }
   async countOffDietByUserId(userId: string): Promise<number> {
     const result = await query(
@@ -111,7 +111,7 @@ export class MethodsMealsRepository implements MealsRepository {
       [userId]
     );
 
-    return result.rows[0];
+    return Number(result.rows[0].count);
   }
   async getLongestOnDietSequence(userId: string): Promise<number> {
     console.log(userId);

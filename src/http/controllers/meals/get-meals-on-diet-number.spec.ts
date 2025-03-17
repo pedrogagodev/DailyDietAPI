@@ -31,16 +31,28 @@ describe("Get Total Meals On Diet Number e2e", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(getMealsOnDietNumberResponse.statusCode).toEqual(200);
+    expect(getMealsOnDietNumberResponse.body).toEqual({
+      mealsNumber: 1,
+    });
   });
 
   it("not should to be get total meals on diet number without user id", async () => {
     const { token } = await createAndAuthenticateUser(app);
 
+    const invalidUserId = null;
+
     const getMealsOnDietNumberResponse = await request(app.server)
-      .get("/me/invalid-user-id/meals/on-diet")
+      .get(`/me/${invalidUserId}/meals/on-diet`)
       .set("Authorization", `Bearer ${token}`);
 
     expect(getMealsOnDietNumberResponse.statusCode).toEqual(400);
+    expect(getMealsOnDietNumberResponse.body).toEqual({
+      details: {
+        userId: ["Invalid user id."]
+      },
+      message: "Validation error",
+      status: "error"
+    });
   });
 
   it("not should to be get total meals on diet number without token", async () => {
@@ -49,5 +61,8 @@ describe("Get Total Meals On Diet Number e2e", () => {
       .set("Authorization", "Bearer invalid-token");
 
     expect(getMealsOnDietNumberResponse.statusCode).toEqual(401);
+    expect(getMealsOnDietNumberResponse.body).toEqual({
+      message: "Unauthorized. Invalid or expired token.",
+    });
   });
 });

@@ -39,11 +39,20 @@ describe("Delete Meal e2e", () => {
   it("not should to be delete meal without meal id", async () => {
     const { token } = await createAndAuthenticateUser(app);
 
+    const nullMealId = null;
+
     const deleteMealResponse = await request(app.server)
-      .delete("/meals/invalid-meal-id")
+      .delete(`/meals/${nullMealId}`)
       .set("Authorization", `Bearer ${token}`);
 
     expect(deleteMealResponse.statusCode).toEqual(400);
+    expect(deleteMealResponse.body).toEqual({
+      details: {
+        mealId: ["Invalid meal id."]
+      },
+      message: "Validation error",
+      status: "error"
+    });
   });
 
   it("not should to be delete meal without token", async () => {
@@ -52,5 +61,8 @@ describe("Delete Meal e2e", () => {
       .set("Authorization", "Bearer invalid-token");
 
     expect(deleteMealResponse.statusCode).toEqual(401);
+    expect(deleteMealResponse.body).toEqual({
+      message: "Unauthorized. Invalid or expired token.",
+    });
   });
 });

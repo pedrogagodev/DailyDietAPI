@@ -3,23 +3,32 @@ import { UpdateMealUseCase } from "./update-meal";
 import { CreateMealUseCase } from "./create-meal";
 import { InMemoryMealsRepository } from "@/repositories/in-memory/in-memory-meals-repository";
 import { MealNotFoundError } from "@/errors/meal-not-found";
+import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 
 let mealsRepository: InMemoryMealsRepository;
+let usersRepository: InMemoryUsersRepository;
 let updateMealCase: UpdateMealUseCase;
 let createMealCase: CreateMealUseCase;
 
 describe("Update Meal Use Case", () => {
   beforeEach(() => {
     mealsRepository = new InMemoryMealsRepository();
-    createMealCase = new CreateMealUseCase(mealsRepository);
+    usersRepository = new InMemoryUsersRepository();
+    createMealCase = new CreateMealUseCase(mealsRepository, usersRepository);
     updateMealCase = new UpdateMealUseCase(mealsRepository);
   });
 
   it("should be able to update meal", async () => {
+    const user = await usersRepository.create({
+      name: "John Doe",
+      email: "john.doe@example.com",
+      password_hash: "hashed-password",
+    });
+
     const createdMeal = await createMealCase.execute({
       name: "Bread with eggs",
       isOnDiet: true,
-      userId: "user-1",
+      userId: user.id,
       description: "A simple breakfast",
     });
 
@@ -38,10 +47,16 @@ describe("Update Meal Use Case", () => {
   });
 
   it("should update only the provided fields", async () => {
+    const user = await usersRepository.create({
+      name: "John Doe",
+      email: "john.doe@example.com",
+      password_hash: "hashed-password",
+    });
+
     const createdMeal = await createMealCase.execute({
       name: "Bread with eggs",
       isOnDiet: true,
-      userId: "user-1",
+      userId: user.id,
       description: "A simple breakfast",
     });
 
@@ -58,10 +73,16 @@ describe("Update Meal Use Case", () => {
   });
 
   it("should not to able to update a meal with the wrong id", async () => {
-    await createMealCase.execute({
+     const user = await usersRepository.create({
+       name: "John Doe",
+       email: "john.doe@example.com",
+       password_hash: "hashed-password",
+     });
+
+      await createMealCase.execute({
       name: "Bread with eggs",
       isOnDiet: true,
-      userId: "user-1",
+      userId: user.id,
       description: "A simple breakfast",
     });
 
