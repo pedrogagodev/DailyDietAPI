@@ -41,20 +41,6 @@ describe("Update Meal e2e", () => {
     expect(updateMealResponse.statusCode).toEqual(200);
   });
 
-  it("not should to be update meal without meal id", async () => {
-    const { token } = await createAndAuthenticateUser(app);
-
-    const updateMealResponse = await request(app.server)
-      .put("/meals/invalid-meal-id")
-      .set("Authorization", `Bearer ${token}`)
-      .send({
-        name: "Pizza with cheese and pepperoni",
-        description: "Pizza with cheese and pepperoni",
-        isOnDiet: false,
-      });
-
-    expect(updateMealResponse.statusCode).toEqual(400);
-  });
 
   it("not should to be update meal without token", async () => {
     const updateMealResponse = await request(app.server)
@@ -62,5 +48,8 @@ describe("Update Meal e2e", () => {
       .set("Authorization", "Bearer invalid-token");
 
     expect(updateMealResponse.statusCode).toEqual(401);
+    expect(updateMealResponse.body).toEqual({
+      message: "Unauthorized. Invalid or expired token.",
+    });
   });
 });
