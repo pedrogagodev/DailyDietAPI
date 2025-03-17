@@ -1,5 +1,6 @@
 import { app } from "@/app";
 import { createAndAuthenticateUser } from "@/utils/tests/create-and-authenticate-user";
+import { randomUUID } from "node:crypto";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -31,6 +32,9 @@ describe("Get Total Meals Number e2e", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(getTotalMealsNumberResponse.statusCode).toEqual(200);
+    expect(getTotalMealsNumberResponse.body).toEqual({
+      mealsNumber: 1,
+    });
   });
 
   it("not should to be get total meals number without user id", async () => {
@@ -41,6 +45,29 @@ describe("Get Total Meals Number e2e", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(getTotalMealsNumberResponse.statusCode).toEqual(400);
+    expect(getTotalMealsNumberResponse.body).toEqual({
+      details: {
+        userId: ["Invalid user id."]
+      },
+      message: "Validation error",
+      status: "error"
+    });
+  });
+
+  it("not should to be get total meals number with invalid user id", async () => {
+    const { token } = await createAndAuthenticateUser(app);
+
+    const invalidUserId = randomUUID();
+
+    const getTotalMealsNumberResponse = await request(app.server)
+      .get(`/me/${invalidUserId}/meals/total`)
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(getTotalMealsNumberResponse.statusCode).toEqual(404);
+    expect(getTotalMealsNumberResponse.body).toEqual({
+      message: "User not found.",
+      status: "error",
+    });
   });
 
   it("not should to be get total meals number without token", async () => {
@@ -49,5 +76,8 @@ describe("Get Total Meals Number e2e", () => {
       .set("Authorization", "Bearer invalid-token");
 
     expect(getTotalMealsNumberResponse.statusCode).toEqual(401);
+    expect(getTotalMealsNumberResponse.body).toEqual({
+      message: "Unauthorized. Invalid or expired token.",
+    });
   });
 });
