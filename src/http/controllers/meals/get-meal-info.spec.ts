@@ -34,16 +34,26 @@ describe("Get Meal Info e2e", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(getMealInfoResponse.statusCode).toEqual(200);
+    expect(getMealInfoResponse.body).toEqual(expect.any(Object));
   });
 
   it("not should to be get meal info without meal id", async () => {
     const { token } = await createAndAuthenticateUser(app);
 
+    const nullMealId = null;
+
     const getMealInfoResponse = await request(app.server)
-      .get("/meals/invalid-meal-id")
+      .get(`/meals/${nullMealId}`)
       .set("Authorization", `Bearer ${token}`);
 
     expect(getMealInfoResponse.statusCode).toEqual(400);
+    expect(getMealInfoResponse.body).toEqual({
+      details: {
+        mealId: ["Invalid meal id."]
+      },
+      message: "Validation error",
+      status: "error"
+    });
   });
 
   it("not should to be get meal info without token", async () => {
@@ -52,5 +62,8 @@ describe("Get Meal Info e2e", () => {
       .set("Authorization", "Bearer invalid-token");
 
     expect(getMealInfoResponse.statusCode).toEqual(401);
+    expect(getMealInfoResponse.body).toEqual({
+      message: "Unauthorized. Invalid or expired token.",
+    });
   });
 });
