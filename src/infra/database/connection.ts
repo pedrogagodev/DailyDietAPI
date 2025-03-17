@@ -1,11 +1,11 @@
 import { env } from "@/config/env";
+import { DatabaseConnectionError } from "@/errors/database-connection-error";
 import pg from "pg";
 
 if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL environment variable is required");
 }
 
-// Configuração do pool de conexões
 export const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
   max: 20,
@@ -47,7 +47,9 @@ export async function query(text: string, params: PostgresParam[] = []) {
     return result;
   } catch (error) {
     console.error(`Error executing query: ${error}`);
-    throw error;
+    throw new DatabaseConnectionError(
+      `Database error: ${(error as Error).message}`
+    );
   } finally {
     client.release();
   }
