@@ -1,11 +1,15 @@
 import type { FastifyInstance } from "fastify";
 import request from "supertest";
 
-export async function createAndAuthenticateUser(app: FastifyInstance) {
+export async function createAndAuthenticateUser(
+  app: FastifyInstance,
+  isAdmin = false,
+) {
   const registerResponse = await request(app.server).post("/register").send({
     name: "John Doe",
     email: "john.doe@example.com",
     password: "JohnDoe123456",
+    role: isAdmin ? "ADMIN" : "USER",
   });
 
   const authResponse = await request(app.server).post("/login").send({
