@@ -17,7 +17,8 @@
     "pretest:e2e": "run-s test:create-pg-environment test:install-pg-environment",
     "test:e2e": "NODE_ENV=test vitest run --dir src/http --environment pg",
     "test:e2e:watch": "NODE_ENV=test vitest --dir src/http --environment pg",
-    "test:watch": "NODE_ENV=test vitest",
+    "test": "NODE_ENV=test vitest run --dir src/use-cases --environment node",
+    "test:watch": "NODE_ENV=test vitest --dir src/use-cases --environment node",
     "test:coverage": "NODE_ENV=test vitest run --coverage",
     "test:ui": "NODE_ENV=test vitest --ui --coverage.enabled=true"
   },
