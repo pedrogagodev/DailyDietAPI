@@ -23,21 +23,16 @@ export async function updateMeal(request: FastifyRequest, reply: FastifyReply) {
   const { name, description, isOnDiet } = updateMealBodySchema.parse(
     request.body
   );
-  try {
-    const updateMealUseCase = makeUpdateMealUseCase();
+  const updateMealUseCase = makeUpdateMealUseCase();
 
-    const { meal } = await updateMealUseCase.execute({
-      id: mealId,
-      data: {
-        name,
-        description,
-        isOnDiet,
-      },
-    });
+  const { meal } = await updateMealUseCase.execute({
+    id: mealId,
+    data: {
+      name,
+      description,
+      isOnDiet,
+    },
+  });
 
-    return reply.status(200).send({ data: meal });
-  } catch (error) {
-    reply.status(400).send({ error: (error as Error).message });
-    throw error;
-  }
+  return reply.status(200).send({ data: meal });
 }
