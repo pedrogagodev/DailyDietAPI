@@ -8,13 +8,14 @@ export class InMemoryUsersRepository implements UsersRepository {
   public items: User[] = [];
 
   async create(data: RegisterUserDataRepo): Promise<User> {
-    const user = {
+    const user: User = {
       id: "user-1",
       name: data.name,
       email: data.email,
       password_hash: data.password_hash,
       createdAt: new Date(),
       updatedAt: new Date(),
+      role: "USER" as const,
     };
 
     this.items.push(user);
