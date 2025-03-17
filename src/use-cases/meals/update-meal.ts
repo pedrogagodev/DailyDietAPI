@@ -30,7 +30,6 @@ export class UpdateMealUseCase {
     if (!checkIfMealExists) {
       throw new MealNotFoundError();
     }
-
     const meal = await this.mealsRepository.update(id, data);
 
     return { meal };
