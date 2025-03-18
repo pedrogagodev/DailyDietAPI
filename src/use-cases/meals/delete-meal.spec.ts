@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { CreateMealUseCase } from "./create-meal";
 import { DeleteMealUseCase } from "./delete-meal";
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
+import { UnauthorizedAccessError } from "@/errors/unauthorized-access-error";
 
 let mealsRepository: InMemoryMealsRepository;
 let usersRepository: InMemoryUsersRepository;
@@ -35,6 +36,7 @@ describe("Delete Meal Use Case", () => {
     await expect(
       deleteMealCase.execute({
         id: createdMeal.meal.id,
+        requestingUserId: user.id,
       })
     ).resolves.not.toThrow();
   });
@@ -56,7 +58,36 @@ describe("Delete Meal Use Case", () => {
     await expect(() =>
       deleteMealCase.execute({
         id: "Any id",
+        requestingUserId: user.id,
       })
     ).rejects.instanceOf(MealNotFoundError);
+  });
+
+  it("should not be able to delete another user's meal", async () => {
+    const user = await usersRepository.create({
+      name: "John Doe",
+      email: "john.doe@example.com",
+      password_hash: "hashed-password",
+    });
+
+    const anotherUser = await usersRepository.create({
+      name: "Jane Doe",
+      email: "jane.doe@example.com",
+      password_hash: "hashed-password",
+    }); 
+
+    const createdMeal = await createMealCase.execute({
+      name: "Bread with eggs",
+      isOnDiet: true,
+      userId: user.id,
+      description: "A simple breakfast",
+    }); 
+
+    await expect(() =>
+      deleteMealCase.execute({
+        id: createdMeal.meal.id,
+        requestingUserId: anotherUser.id,
+      })
+    ).rejects.instanceOf(UnauthorizedAccessError);
   });
 });
