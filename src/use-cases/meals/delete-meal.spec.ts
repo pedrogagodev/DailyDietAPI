@@ -31,6 +31,7 @@ describe("Delete Meal Use Case", () => {
       isOnDiet: true,
       userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     await expect(
@@ -53,6 +54,7 @@ describe("Delete Meal Use Case", () => {
       isOnDiet: true,
       userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     await expect(() =>
@@ -81,6 +83,7 @@ describe("Delete Meal Use Case", () => {
       isOnDiet: true,
       userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     }); 
 
     await expect(() =>

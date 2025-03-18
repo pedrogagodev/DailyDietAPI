@@ -31,6 +31,7 @@ describe("Update Meal Use Case", () => {
       isOnDiet: true,
       userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     const response = await updateMealCase.execute({
@@ -60,6 +61,7 @@ describe("Update Meal Use Case", () => {
       isOnDiet: true,
       userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     const response = await updateMealCase.execute({
@@ -87,6 +89,7 @@ describe("Update Meal Use Case", () => {
       isOnDiet: true,
       userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     await expect(() =>
@@ -118,6 +121,7 @@ describe("Update Meal Use Case", () => {
       isOnDiet: true,
       userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     await expect(
