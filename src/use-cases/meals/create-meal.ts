@@ -4,8 +4,9 @@ import type {
   MealsRepository,
 } from "@/core/repositories/meals-repository";
 import type { UsersRepository } from "@/core/repositories/users-repository";
+import { InvalidMealDataError } from "@/errors/invalid-meal-data-error";
+import { UnauthorizedAccessError } from "@/errors/unauthorized-access-error";
 import { UserNotFoundError } from "@/errors/user-not-found";
-
 interface CreateMealUseCaseResponse {
   meal: Meal;
 }
@@ -27,7 +28,16 @@ export class CreateMealUseCase {
     isOnDiet,
     userId,
     description,
+    requestingUserId,
   }: CreateMealData): Promise<CreateMealUseCaseResponse> {
+    if (!userId) {
+      throw new UserNotFoundError();
+    }
+
+    if (requestingUserId !== userId) {
+      throw new UnauthorizedAccessError();
+    }
+
     const userExists = await this.usersRepository.findById(userId);
 
     if (!userExists) {
@@ -39,6 +49,7 @@ export class CreateMealUseCase {
       isOnDiet,
       userId,
       description,
+      requestingUserId,
     });
 
     return { meal };

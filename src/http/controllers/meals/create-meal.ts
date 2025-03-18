@@ -2,26 +2,20 @@ import { makeCreateMealUseCase } from "@/use-cases/factories/make-create-meal-us
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-interface CreateMealRequest {
-  userId: string;
-  name: string;
-  description?: string | null;
-  isOnDiet: boolean;
-}
 
 export async function createMeal(request: FastifyRequest, reply: FastifyReply) {
   const createMealSchema = z.object({
     name: z.string().min(1, { message: "Please, provide a meal name" }),
-    userId: z.string().uuid({ message: "Invalid user id." }),
     description: z.string().nullable(),
     isOnDiet: z.boolean({
       message: "Please, provide a valid value for isOnDiet",
     }),
   });
 
-  const { name, userId, description, isOnDiet } = createMealSchema.parse(
+  const { name, description, isOnDiet } = createMealSchema.parse(
     request.body
   );
+  const userId = request.user.sub;
 
   const createMealUseCase = makeCreateMealUseCase();
 
@@ -30,6 +24,7 @@ export async function createMeal(request: FastifyRequest, reply: FastifyReply) {
     name,
     description,
     isOnDiet,
+    requestingUserId: userId,
   });
 
   return reply.status(201).send({ data });
