@@ -5,6 +5,7 @@ import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-user
 import { beforeEach, describe, expect, it } from "vitest";
 import { CreateMealUseCase } from "./create-meal";
 import { GetMealInfoUseCase } from "./get-meal-info";
+import { UnauthorizedAccessError } from "@/errors/unauthorized-access-error";
 
 let mealsRepository: InMemoryMealsRepository;
 let usersRepository: InMemoryUsersRepository;
@@ -31,12 +32,14 @@ describe("Get Meal Info Use Case", () => {
       isOnDiet: true,
       userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     await expect(
       getMealInfoCase.execute({
         userId: createdMeal.meal.userId,
-        id: createdMeal.meal.id,
+        mealId: createdMeal.meal.id,
+        requestingUserId: user.id,
       })
     ).resolves.not.toThrow();
   });
@@ -53,12 +56,14 @@ describe("Get Meal Info Use Case", () => {
       isOnDiet: true,
       userId: wrongUser.id,
       description: "A simple breakfast",
+      requestingUserId: wrongUser.id,
     });
 
     await expect(
       getMealInfoCase.execute({
-        userId: "Any user id",
-        id: createdMeal.meal.id,
+        userId: "wrong-user-id",
+        mealId: createdMeal.meal.id,
+        requestingUserId: "wrong-user-id",
       })
     ).rejects.instanceOf(UserNotFoundError);
   });
@@ -75,13 +80,45 @@ describe("Get Meal Info Use Case", () => {
       isOnDiet: true,
       userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     await expect(
       getMealInfoCase.execute({
         userId: createdMeal.meal.userId,
-        id: "Any id",
+        mealId: "Any id",
+        requestingUserId: user.id,
       })
     ).rejects.instanceOf(MealNotFoundError);
+  });
+
+  it("should not be able to get meal info with another user's id", async () => {
+    const user = await usersRepository.create({
+      name: "John Doe",
+      email: "john.doe@example.com",
+      password_hash: "hashed-password",
+    });
+
+    const anotherUser = await usersRepository.create({
+      name: "Jane Doe",
+      email: "jane.doe@example.com",
+      password_hash: "hashed-password",
+    }); 
+
+    const createdMeal = await createMealCase.execute({
+      name: "Bread with eggs",
+      isOnDiet: true,
+      userId: user.id,
+      description: "A simple breakfast",
+      requestingUserId: user.id,
+    });
+
+    await expect(
+      getMealInfoCase.execute({
+        userId: anotherUser.id,
+        mealId: createdMeal.meal.id,
+        requestingUserId: user.id,
+      })
+    ).rejects.instanceOf(UnauthorizedAccessError);
   });
 });

@@ -3,23 +3,28 @@ import { createAndAuthenticateUser } from "@/utils/tests/create-and-authenticate
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+let userData: {
+  token: string;
+  userId: string;
+};
+
 describe("Get Total Meals On Diet Number e2e", () => {
   beforeAll(async () => {
     await app.ready();
+    userData = await createAndAuthenticateUser(app);
   });
   afterAll(async () => {
     await app.close();
   });
 
-  it("should be able to get total meals on dietnumber", async () => {
-    const { token, userId } = await createAndAuthenticateUser(app);
+  it("should be able to get total meals on diet number", async () => {
+    const { token } = userData;
 
     const createMealResponse = await request(app.server)
       .post("/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
-        userId: userId,
         description: "Pizza with cheese and pepperoni",
         isOnDiet: true,
       });
@@ -27,7 +32,7 @@ describe("Get Total Meals On Diet Number e2e", () => {
     expect(createMealResponse.statusCode).toEqual(201);
 
     const getMealsOnDietNumberResponse = await request(app.server)
-      .get(`/me/${userId}/meals/on-diet`)
+      .get("/me/meals/on-diet")
       .set("Authorization", `Bearer ${token}`);
 
     expect(getMealsOnDietNumberResponse.statusCode).toEqual(200);
@@ -36,33 +41,65 @@ describe("Get Total Meals On Diet Number e2e", () => {
     });
   });
 
-  it("not should to be get total meals on diet number without user id", async () => {
-    const { token } = await createAndAuthenticateUser(app);
-
-    const invalidUserId = null;
-
-    const getMealsOnDietNumberResponse = await request(app.server)
-      .get(`/me/${invalidUserId}/meals/on-diet`)
-      .set("Authorization", `Bearer ${token}`);
-
-    expect(getMealsOnDietNumberResponse.statusCode).toEqual(400);
-    expect(getMealsOnDietNumberResponse.body).toEqual({
-      details: {
-        userId: ["Invalid user id."]
-      },
-      message: "Validation error",
-      status: "error"
-    });
-  });
-
   it("not should to be get total meals on diet number without token", async () => {
     const getMealsOnDietNumberResponse = await request(app.server)
-      .get("/me/invalid-user-id/meals/on-diet")
+      .get("/me/meals/on-diet")
       .set("Authorization", "Bearer invalid-token");
 
     expect(getMealsOnDietNumberResponse.statusCode).toEqual(401);
     expect(getMealsOnDietNumberResponse.body).toEqual({
       message: "Unauthorized. Invalid or expired token.",
     });
+  });
+  it("should only return meals on diet number belonging to the authenticated user", async () => {
+    const firstUser = await createAndAuthenticateUser(app, false);
+
+    await request(app.server)
+      .post("/meals")
+      .set("Authorization", `Bearer ${firstUser.token}`)
+      .send({
+        name: "First user meal",
+        description: "This meal belongs to the first user",
+        isOnDiet: true,
+      });
+
+      await request(app.server)
+      .post("/meals")
+      .set("Authorization", `Bearer ${firstUser.token}`)
+      .send({
+        name: "Second meal of first user",
+        description: "This meal belongs to the first user",
+        isOnDiet: false,
+      });
+
+    const secondUser = await createAndAuthenticateUser(app, false);
+
+    await request(app.server)
+      .post("/meals")
+      .set("Authorization", `Bearer ${secondUser.token}`)
+      .send({
+        name: "Second user meal",
+        description: "This meal belongs to the second user",
+        isOnDiet: false,
+      });
+
+    const getMealsOnDietNumberResponseOfFirstUser = await request(app.server)
+      .get("/me/meals/on-diet")
+      .set("Authorization", `Bearer ${firstUser.token}`);
+
+    expect(getMealsOnDietNumberResponseOfFirstUser.statusCode).toEqual(200);
+    expect(getMealsOnDietNumberResponseOfFirstUser.body).toEqual({
+      mealsNumber: 1,
+    });
+
+    const getMealsOnDietNumberResponseOfSecondUser = await request(app.server)
+      .get("/me/meals/on-diet")
+      .set("Authorization", `Bearer ${secondUser.token}`);
+
+    expect(getMealsOnDietNumberResponseOfSecondUser.statusCode).toEqual(200);
+    expect(getMealsOnDietNumberResponseOfSecondUser.body).toEqual({
+      mealsNumber: 0,
+    });
+
   });
 });

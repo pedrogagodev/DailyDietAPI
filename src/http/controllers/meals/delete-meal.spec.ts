@@ -3,16 +3,22 @@ import { createAndAuthenticateUser } from "@/utils/tests/create-and-authenticate
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+let userData = {
+  token: "",
+  userId: "",
+};
+
 describe("Delete Meal e2e", () => {
   beforeAll(async () => {
     await app.ready();
+    userData = await createAndAuthenticateUser(app);
   });
   afterAll(async () => {
     await app.close();
   });
 
   it("should be able to delete a meal", async () => {
-    const { token, userId } = await createAndAuthenticateUser(app);
+    const { token, userId } = userData;
 
     const createMealResponse = await request(app.server)
       .post("/meals")
@@ -37,21 +43,24 @@ describe("Delete Meal e2e", () => {
   });
 
   it("not should to be delete meal without meal id", async () => {
-    const { token } = await createAndAuthenticateUser(app);
+    const { token, userId } = userData;
 
-    const nullMealId = null;
+    await request(app.server)
+      .post("/meals")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: "Pizza",
+        userId: userId,
+      });
 
     const deleteMealResponse = await request(app.server)
-      .delete(`/meals/${nullMealId}`)
+      .delete("/meals/null-meal-id")
       .set("Authorization", `Bearer ${token}`);
-
+    console.log("🚨🚨🚨🚨 deleteMealResponse.body", deleteMealResponse.body);
     expect(deleteMealResponse.statusCode).toEqual(400);
     expect(deleteMealResponse.body).toEqual({
-      details: {
-        mealId: ["Invalid meal id."]
-      },
-      message: "Validation error",
-      status: "error"
+      message: "Invalid meal ID format",
+      status: "error",
     });
   });
 
@@ -63,6 +72,39 @@ describe("Delete Meal e2e", () => {
     expect(deleteMealResponse.statusCode).toEqual(401);
     expect(deleteMealResponse.body).toEqual({
       message: "Unauthorized. Invalid or expired token.",
+    });
+  });
+
+  it("should not be able to delete a meal from another user", async () => {
+    const { token } = userData;
+
+    const createMealResponse = await request(app.server)
+      .post("/meals")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: "Pizza",
+        description: "Pizza with cheese and pepperoni",
+        isOnDiet: true,
+      });
+
+    expect(createMealResponse.statusCode).toEqual(201);
+
+    const { token: anotherUserToken } = await createAndAuthenticateUser(
+      app,
+      false
+    );
+
+    const { data } = createMealResponse.body;
+    const mealId = data.meal.id;
+
+    const deleteMealResponse = await request(app.server)
+      .delete(`/meals/${mealId}`)
+      .set("Authorization", `Bearer ${anotherUserToken}`);
+
+    expect(deleteMealResponse.statusCode).toEqual(403);
+    expect(deleteMealResponse.body).toEqual({
+      message: "You are not authorized to access this resource.",
+      status: "error",
     });
   });
 });

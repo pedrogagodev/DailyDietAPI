@@ -2,11 +2,13 @@ import type { Meal } from "@/core/entities/meal";
 import type { MealsRepository } from "@/core/repositories/meals-repository";
 import type { UsersRepository } from "@/core/repositories/users-repository";
 import { MealNotFoundError } from "@/errors/meal-not-found";
+import { UnauthorizedAccessError } from "@/errors/unauthorized-access-error";
 import { UserNotFoundError } from "@/errors/user-not-found";
 
 interface GetMealInfoUseCaseRequest {
   userId: string;
-  id: string;
+  mealId: string;
+  requestingUserId: string;
 }
 
 interface GetMealInfoUseCaseResponse {
@@ -27,8 +29,13 @@ export class GetMealInfoUseCase {
 
   async execute({
     userId,
-    id,
+    mealId,
+    requestingUserId,
   }: GetMealInfoUseCaseRequest): Promise<GetMealInfoUseCaseResponse> {
+
+    if (requestingUserId !== userId) {
+      throw new UnauthorizedAccessError();
+    }
     
     const checkIfUserExists = await this.usersRepository.findById(userId);
 
@@ -36,8 +43,7 @@ export class GetMealInfoUseCase {
       throw new UserNotFoundError();
     }
     
-    
-    const meal = await this.mealsRepository.findByUserIdAndId(userId, id);
+    const meal = await this.mealsRepository.findByUserIdAndId(userId, mealId);
     
     if (!meal) {
       throw new MealNotFoundError();

@@ -4,13 +4,14 @@ import type {
   MealsRepository,
   UpdateMealData,
 } from "@/core/repositories/meals-repository";
+import { randomUUID } from "node:crypto";
 
 export class InMemoryMealsRepository implements MealsRepository {
   public items: Meal[] = [];
 
   async create(data: CreateMealData): Promise<Meal> {
     const meal = {
-      id: "meal-1",
+      id: randomUUID(),
       name: data.name,
       dateTime: new Date(),
       description: data.description || null,

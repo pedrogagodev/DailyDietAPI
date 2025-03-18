@@ -7,8 +7,8 @@ import { getMealsOnDietNumber } from "@/http/controllers/meals/get-meals-on-diet
 import { getTotalMealsNumber } from "@/http/controllers/meals/get-total-meals-number";
 import { listMeals } from "@/http/controllers/meals/list-meals";
 import { updateMeal } from "@/http/controllers/meals/update-meal";
+import { ensureMealOwnershipMiddleware } from "@/http/middlewares/ensure-meal-ownership";
 import { verifyJWT } from "@/http/middlewares/verify-jwt";
-
 import type { FastifyInstance } from "fastify";
 
 export async function mealsRoutes(app: FastifyInstance) {
@@ -16,14 +16,26 @@ export async function mealsRoutes(app: FastifyInstance) {
 
   app.post("/meals", createMeal);
 
-  app.get("/me/:userId/meals", listMeals);
-  app.get("/me/:userId/meals/total", getTotalMealsNumber);
-  app.get("/me/:userId/meals/on-diet", getMealsOnDietNumber);
-  app.get("/me/:userId/meals/off-diet", getMealsOffDietNumber);
-  app.get("/me/:userId/meals/longest-on-diet-sequence", getLongestOnDietSequence);
-  app.get("/meals/:mealId", getMealInfo);
+  app.get("/me/meals", listMeals);
+  app.get("/me/meals/total", getTotalMealsNumber);
+  app.get("/me/meals/on-diet", getMealsOnDietNumber);
+  app.get("/me/meals/off-diet", getMealsOffDietNumber);
+  app.get("/me/meals/longest-on-diet-sequence", getLongestOnDietSequence);
+  app.get(
+    "/meals/:mealId",
+    { onRequest: [ensureMealOwnershipMiddleware] },
+    getMealInfo
+  );
 
-  app.put("/meals/:mealId", updateMeal);
+  app.put(
+    "/meals/:mealId",
+    { onRequest: [ensureMealOwnershipMiddleware] },
+    updateMeal
+  );
 
-  app.delete("/meals/:mealId", deleteMeal);
+  app.delete(
+    "/meals/:mealId",
+    { onRequest: [ensureMealOwnershipMiddleware] },
+    deleteMeal
+  );
 }

@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { CreateMealUseCase } from "./create-meal";
 import { GetTotalMealsNumberUseCase } from "./get-total-meals-number";
 import { UserNotFoundError } from "@/errors/user-not-found";
+import { UnauthorizedAccessError } from "@/errors/unauthorized-access-error";
 
 let mealsRepository: InMemoryMealsRepository;
 let usersRepository: InMemoryUsersRepository;
@@ -33,10 +34,12 @@ describe("Get Total Meals Number Use Case", () => {
       isOnDiet: true,
       userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     const totalMealsNumber = await getTotalMealsNumberCase.execute({
       userId: createdMeal.meal.userId,
+      requestingUserId: user.id,
     });
 
     expect(totalMealsNumber).toBe(1);
@@ -46,7 +49,37 @@ describe("Get Total Meals Number Use Case", () => {
     await expect(
       getTotalMealsNumberCase.execute({
         userId: "wrong-user-id",
+        requestingUserId: "wrong-user-id",
       })
     ).rejects.instanceOf(UserNotFoundError);
+  });
+
+  it("should not be able to get total meals number with another user's id", async () => {
+    const user = await usersRepository.create({
+      name: "John Doe",
+      email: "john.doe@example.com",
+      password_hash: "hashed-password",
+    });
+    
+    const anotherUser = await usersRepository.create({
+      name: "Jane Doe",
+      email: "jane.doe@example.com",
+      password_hash: "hashed-password",
+    });
+    
+    await createMealCase.execute({
+      name: "Bread with eggs",
+      isOnDiet: true,
+      userId: user.id,
+      description: "A simple breakfast",
+      requestingUserId: user.id,
+    });
+    
+    await expect(
+      getTotalMealsNumberCase.execute({
+        userId: user.id,
+        requestingUserId: anotherUser.id
+      })
+    ).rejects.toThrowError(UnauthorizedAccessError);
   });
 });
