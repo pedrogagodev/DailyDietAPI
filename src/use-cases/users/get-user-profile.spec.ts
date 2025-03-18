@@ -1,4 +1,4 @@
-import { InvalidCredentialsError } from "@/errors/invalid-credentials-error";
+import { UserNotFoundError } from "@/errors/user-not-found";
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import bcrypt from "bcrypt";
 import { beforeEach, describe, expect, it } from "vitest";
@@ -33,6 +33,6 @@ describe("Get User Profile Use Case", () => {
       getUserProfileUseCase.execute({
         userId: "non-existing-id",
       })
-    ).rejects.toBeInstanceOf(InvalidCredentialsError);
+    ).rejects.toBeInstanceOf(UserNotFoundError);
   });
 });

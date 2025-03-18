@@ -4,14 +4,16 @@ import type {
   UpdateMealData,
 } from "@/core/repositories/meals-repository";
 import { MealNotFoundError } from "@/errors/meal-not-found";
+import { UnauthorizedAccessError } from "@/errors/unauthorized-access-error";
 
 interface UpdateMealUseCaseRequest {
   id: string;
   data: UpdateMealData;
+  requestingUserId: string;
 }
 
 interface UpdateMealUseCaseResponse {
-  meal: Meal;
+  updatedMeal: Meal;
 }
 
 export class UpdateMealUseCase {
@@ -24,15 +26,20 @@ export class UpdateMealUseCase {
   async execute({
     id,
     data,
+    requestingUserId,
   }: UpdateMealUseCaseRequest): Promise<UpdateMealUseCaseResponse> {
-    const checkIfMealExists = await this.mealsRepository.findById(id);
+    const meal = await this.mealsRepository.findById(id);
     
-    if (!checkIfMealExists) {
+    if (!meal) {
       throw new MealNotFoundError();
     }
 
-    const meal = await this.mealsRepository.update(id, data);
+    if (meal.userId !== requestingUserId) {
+      throw new UnauthorizedAccessError();
+    }
 
-    return { meal };
+    const updatedMeal = await this.mealsRepository.update(id, data);
+
+    return { updatedMeal };
   }
 }

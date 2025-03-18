@@ -1,6 +1,6 @@
 import type { User } from "@/core/entities/user";
 import type { UsersRepository } from "@/core/repositories/users-repository";
-import { InvalidCredentialsError } from "@/errors/invalid-credentials-error";
+import { UserNotFoundError } from "@/errors/user-not-found";
 
 interface GetUserProfileRequest {
   userId: string;
@@ -25,7 +25,7 @@ export class GetUserProfileUseCase {
     const user = await this.usersRepository.findById(userId);
 
     if (!user) {
-      throw new InvalidCredentialsError();
+      throw new UserNotFoundError();
     }
 
     return {

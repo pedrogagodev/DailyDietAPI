@@ -1,4 +1,4 @@
-import { InvalidCredentialsError } from "@/errors/invalid-credentials-error";
+import { UserNotFoundError } from "@/errors/user-not-found";
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import bcrypt from "bcrypt";
 import { beforeEach, describe, expect, it } from "vitest";
@@ -34,7 +34,7 @@ describe("Authenticate Use Case", () => {
         email: "johndoe@example.com",
         password: "JonDoe123",
       })
-    ).rejects.toBeInstanceOf(InvalidCredentialsError);
+    ).rejects.toBeInstanceOf(UserNotFoundError);
   });
 
   it("should not to able to authenticate with wrong password", async () => {
@@ -49,6 +49,6 @@ describe("Authenticate Use Case", () => {
         email: "johndoe@example.com",
         password: "JonDoe1212223",
       })
-    ).rejects.toBeInstanceOf(InvalidCredentialsError);
+    ).rejects.toBeInstanceOf(UserNotFoundError);
   });
 });

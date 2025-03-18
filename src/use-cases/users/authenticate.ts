@@ -3,7 +3,7 @@ import type {
   AuthUserData,
   UsersRepository,
 } from "@/core/repositories/users-repository";
-import { InvalidCredentialsError } from "@/errors/invalid-credentials-error";
+import { UserNotFoundError } from "@/errors/user-not-found";
 import bcrypt from "bcrypt";
 
 interface AuthenticateUseCaseResponse {
@@ -17,15 +17,18 @@ export class AuthenticateUseCase {
     this.usersRepository = usersRepository;
   }
 
-  async execute({ email, password }: AuthUserData): Promise<AuthenticateUseCaseResponse> {
+  async execute({
+    email,
+    password,
+  }: AuthUserData): Promise<AuthenticateUseCaseResponse> {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) {
-      throw new InvalidCredentialsError();
+      throw new UserNotFoundError();
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
     if (!isPasswordValid) {
-      throw new InvalidCredentialsError();
+      throw new UserNotFoundError();
     }
 
     return { user };

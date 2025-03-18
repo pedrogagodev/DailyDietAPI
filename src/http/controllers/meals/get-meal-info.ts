@@ -7,17 +7,14 @@ export async function getMealInfo(
   reply: FastifyReply
 ) {
   const getMealInfoSchema = z.object({
-    mealId: z.string().min(1, { message: "Please, provide a meal id" }),
+    mealId: z.string().uuid({ message: "Invalid meal id." }),
   });
+
   const { mealId } = getMealInfoSchema.parse(request.params);
   const userId = request.user.sub;
-  try {
-    const getMealInfoUseCase = makeGetMealInfoUseCase();
-    const meal = await getMealInfoUseCase.execute({ id: mealId, userId });
 
-    return reply.status(200).send({ data: meal });
-  } catch (error) {
-    reply.status(400).send({ error: (error as Error).message });
-    throw error;
-  }
+  const getMealInfoUseCase = makeGetMealInfoUseCase();
+  const meal = await getMealInfoUseCase.execute({ mealId, userId, requestingUserId: userId });
+
+  return reply.status(200).send({ data: meal });
 }
