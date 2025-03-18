@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { CreateMealUseCase } from "./create-meal";
 import { GetMealsOnDietNumberUseCase } from "./get-meals-on-diet-number";
 import { UserNotFoundError } from "@/errors/user-not-found";
+import { UnauthorizedAccessError } from "@/errors/unauthorized-access-error";
 
 let mealsRepository: InMemoryMealsRepository;
 let usersRepository: InMemoryUsersRepository;
@@ -20,17 +21,12 @@ describe("Get Total Meals On Diet Number Use Case", () => {
       usersRepository
     );
 
-    usersRepository.create({
-      name: "John Doe",
-      email: "john.doe@example.com",
-      password_hash: "hashed-password",
-    });
   });
 
   it("should be able to get total meals on diet number", async () => {
     const user = await usersRepository.create({
-      name: "Test User",
-      email: "test@example.com",
+      name: "John Doe",
+      email: "john.doe@example.com",
       password_hash: "hashed-password",
     });
 
@@ -39,47 +35,37 @@ describe("Get Total Meals On Diet Number Use Case", () => {
       isOnDiet: true,
       userId: user.id,
       description: "A simple breakfast",
-    });
-
-    const totalMealsNumber = await getMealsOnDietNumberCase.execute({
-      userId: createdMeal.meal.userId,
-    });
-
-    expect(totalMealsNumber).toBe(1);
-  });
-
-  it("should be able to get total meals on diet number", async () => {
-    const createdMeal = await createMealCase.execute({
-      name: "Bread with eggs",
-      isOnDiet: true,
-      userId: "user-1",
-      description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     await createMealCase.execute({
       name: "Bread with eggs2",
       isOnDiet: false,
-      userId: "user-1",
+      userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     await createMealCase.execute({
       name: "Bread with eggs3",
       isOnDiet: true,
-      userId: "user-1",
+      userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     await createMealCase.execute({
       name: "Bread with eggs",
       isOnDiet: true,
-      userId: "user-1",
+      userId: user.id,
       description: "A simple breakfast",
+      requestingUserId: user.id,
     });
 
     const totalMealsNumber = await getMealsOnDietNumberCase.execute({
       userId: createdMeal.meal.userId,
-    });
+      requestingUserId: user.id,
+    }); 
 
     expect(totalMealsNumber).toBe(3);
   });
@@ -88,7 +74,37 @@ describe("Get Total Meals On Diet Number Use Case", () => {
     await expect(
       getMealsOnDietNumberCase.execute({
         userId: "wrong-user-id",
+        requestingUserId: "wrong-user-id",
       })
     ).rejects.instanceOf(UserNotFoundError);
+  });
+
+  it("should not be able to get total meals on diet number with another user's id", async () => {
+    const user = await usersRepository.create({
+      name: "John Doe",
+      email: "john.doe@example.com",
+      password_hash: "hashed-password",
+    });
+    
+    const anotherUser = await usersRepository.create({
+      name: "Jane Doe",
+      email: "jane.doe@example.com",
+      password_hash: "hashed-password",
+    });
+    
+    await createMealCase.execute({
+      name: "Bread with eggs",
+      isOnDiet: true,
+      userId: user.id,
+      description: "A simple breakfast",
+      requestingUserId: user.id,
+    });
+    
+    await expect(
+      getMealsOnDietNumberCase.execute({
+        userId: user.id,
+        requestingUserId: anotherUser.id
+      })
+    ).rejects.toThrowError(UnauthorizedAccessError);
   });
 });

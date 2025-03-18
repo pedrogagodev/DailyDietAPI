@@ -1,9 +1,11 @@
 import type { MealsRepository } from "@/core/repositories/meals-repository";
 import type { UsersRepository } from "@/core/repositories/users-repository";
+import { UnauthorizedAccessError } from "@/errors/unauthorized-access-error";
 import { UserNotFoundError } from "@/errors/user-not-found";
 
 interface getMealsOnDietNumberUseCaseRequest {
   userId: string;
+  requestingUserId: string;
 }
 
 export class GetMealsOnDietNumberUseCase {
@@ -20,7 +22,12 @@ export class GetMealsOnDietNumberUseCase {
 
   async execute({
     userId,
+    requestingUserId,
   }: getMealsOnDietNumberUseCaseRequest): Promise<number> {
+    if (userId !== requestingUserId) {
+      throw new UnauthorizedAccessError();
+    }
+
     const user = await this.usersRepository.findById(userId);
 
     if (!user) {
