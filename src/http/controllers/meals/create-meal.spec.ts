@@ -4,16 +4,22 @@ import { createAndAuthenticateUser } from "@/utils/tests/create-and-authenticate
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+let userData = {
+  token: "",
+  userId: "",
+};
+
 describe("Create Meal e2e", () => {
   beforeAll(async () => {
     await app.ready();
+    userData = await createAndAuthenticateUser(app);
   });
   afterAll(async () => {
     await app.close();
   });
 
   it("should be able to create a meal", async () => {
-    const { token, userId } = await createAndAuthenticateUser(app);
+    const { token, userId } = userData;
 
     const response = await request(app.server)
       .post("/meals")
@@ -29,18 +35,7 @@ describe("Create Meal e2e", () => {
   });
 
   it("not should to be create meal with invalid token", async () => {
-    await request(app.server).post("/register").send({
-      name: "John Doe",
-      email: "johndoe2@example.com",
-      password: "JohnDoe123456",
-    });
-
-    const authResponse = await request(app.server).post("/login").send({
-      email: "johndoe2@example.com",
-      password: "JohnDoe123456",
-    });
-
-    const { token } = authResponse.body;
+    const { token } = userData;
 
     const response = await request(app.server)
       .post("/meals")
@@ -58,16 +53,22 @@ describe("Create Meal e2e", () => {
   });
 
   it("not should to be create meal with invalid user id", async () => {
-    const { token } = await createAndAuthenticateUser(app);
-
     const invalidUserId = randomUUID();
+
+    const invalidToken = app.jwt.sign(
+      {
+        role: "USER",
+      },
+      {
+        sub: invalidUserId,
+      }
+    );
 
     const response = await request(app.server)
       .post("/meals")
-      .set("Authorization", `Bearer ${token}`)
+      .set("Authorization", `Bearer ${invalidToken}`)
       .send({
         name: "Pizza",
-        userId: invalidUserId,
         description: "Pizza with cheese and pepperoni",
         isOnDiet: true,
       });
@@ -76,40 +77,6 @@ describe("Create Meal e2e", () => {
     expect(response.body).toEqual({
       message: "User not found.",
       status: "error",
-    });
-  });
-
-  it("not should to be create meal without user id", async () => {
-    await request(app.server).post("/register").send({
-      name: "John Doe",
-      email: "johndoe3@example.com",
-      password: "JohnDoe123456",
-    });
-
-    const authResponse = await request(app.server).post("/login").send({
-      email: "johndoe3@example.com",
-      password: "JohnDoe123456",
-    });
-
-    const { token } = authResponse.body;
-
-    const response = await request(app.server)
-      .post("/meals")
-      .set("Authorization", `Bearer ${token}`)
-      .send({
-        name: "Pizza",
-        userId: null,
-        description: "Pizza with cheese and pepperoni",
-        isOnDiet: true,
-      });
-
-    expect(response.statusCode).toEqual(400);
-    expect(response.body).toEqual({
-      message: "Validation error",
-      status: "error",
-      details: {
-        userId: ["Expected string, received null"],
-      },
     });
   });
 
