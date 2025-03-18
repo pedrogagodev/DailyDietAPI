@@ -2,6 +2,7 @@ import type { Meal } from "../entities/meal";
 
 export interface CreateMealData {
   userId: string;
+  requestingUserId: string;
   name: string;
   description?: string | null;
   isOnDiet: boolean;
