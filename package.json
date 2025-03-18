@@ -29,11 +29,13 @@
   "dependencies": {
     "@fastify/cookie": "11.0.2",
     "@fastify/jwt": "9.0.4",
+    "@types/uuid": "10.0.0",
     "bcrypt": "5.1.1",
     "config": "3.3.12",
     "dotenv": "16.4.7",
     "fastify": "5.2.1",
-    "pg": "8.13.3"
+    "pg": "8.13.3",
+    "uuid": "11.1.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
