@@ -3,13 +3,14 @@ import type {
   RegisterUserDataRepo,
   UsersRepository,
 } from "@/core/repositories/users-repository";
+import { randomUUID } from "node:crypto";
 
 export class InMemoryUsersRepository implements UsersRepository {
   public items: User[] = [];
 
   async create(data: RegisterUserDataRepo): Promise<User> {
     const user: User = {
-      id: "user-1",
+      id: randomUUID(),
       name: data.name,
       email: data.email,
       password_hash: data.password_hash,
