@@ -16,11 +16,11 @@ export async function mealsRoutes(app: FastifyInstance) {
 
   app.post("/meals", createMeal);
 
-  app.get("/me/:userId/meals", listMeals);
-  app.get("/me/:userId/meals/total", getTotalMealsNumber);
-  app.get("/me/:userId/meals/on-diet", getMealsOnDietNumber);
-  app.get("/me/:userId/meals/off-diet", getMealsOffDietNumber);
-  app.get("/me/:userId/meals/longest-on-diet-sequence", getLongestOnDietSequence);
+  app.get("/me/meals", listMeals);
+  app.get("/me/meals/total", getTotalMealsNumber);
+  app.get("/me/meals/on-diet", getMealsOnDietNumber);
+  app.get("/me/meals/off-diet", getMealsOffDietNumber);
+  app.get("/me/meals/longest-on-diet-sequence", getLongestOnDietSequence);
   app.get("/meals/:mealId", getMealInfo);
 
   app.put("/meals/:mealId", updateMeal);
