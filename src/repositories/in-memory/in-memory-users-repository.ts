@@ -31,4 +31,12 @@ export class InMemoryUsersRepository implements UsersRepository {
     const user = this.items.find(user => user.id === id);
     return Promise.resolve(user || null);
   }
+  async update(id: string, data: Partial<User>): Promise<User> {
+    const userIndex = this.items.findIndex(user => user.id === id);
+    if (userIndex === -1) {
+      throw new Error("User not found");
+    }
+    this.items[userIndex] = { ...this.items[userIndex], ...data };
+    return Promise.resolve(this.items[userIndex]);
+  } 
 }
