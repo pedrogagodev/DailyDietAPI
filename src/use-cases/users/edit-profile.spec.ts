@@ -98,4 +98,22 @@ describe("Edit Profile Use Case", () => {
       })
     ).rejects.toBeInstanceOf(UserAlreadyExistsError);
   });
+
+  it("should not able to edit profile for another user", async () => {
+    const user = await usersRepository.create({
+      name: "John Doe",
+      email: "johndoe@example.com",
+      password_hash: "hashed-password",
+    });
+
+    await expect(() =>
+      editProfileUseCase.execute({
+        userId: user.id,
+        requestingUserId: "2",
+        name: "John Doe",
+        email: "johndoe@example.com",
+        currentPassword: "hashed-password",
+      })
+    ).rejects.toBeInstanceOf(UnauthorizedAccessError);
+  });
 });
