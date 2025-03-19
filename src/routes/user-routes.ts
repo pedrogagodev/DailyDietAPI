@@ -1,4 +1,5 @@
 import { authenticate } from "@/http/controllers/users/authenticate";
+import { editProfile } from "@/http/controllers/users/edit-profile";
 import { profile } from "@/http/controllers/users/profile";
 import { refresh } from "@/http/controllers/users/refresh";
 import { register } from "@/http/controllers/users/register";
@@ -12,4 +13,5 @@ export async function usersRoutes(app: FastifyInstance) {
   app.patch("/token/refresh", refresh);
 
   app.get("/me", { onRequest: [verifyJWT] }, profile);
+  app.put("/me", { onRequest: [verifyJWT] }, editProfile);
 }
