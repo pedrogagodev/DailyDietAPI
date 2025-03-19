@@ -36,7 +36,7 @@ describe("Register e2e", () => {
         name: "John Doe2",
         email: "john.doe2@example.com",
       },
-    }); 
+    });
   });
 
   it("should not be able to edit profile with duplicate email", async () => {
@@ -77,5 +77,21 @@ describe("Register e2e", () => {
       });
 
     expect(response.statusCode).toEqual(400);
+  });
+
+  it("should not be able to edit profile for another user", async () => {
+    const response = await request(app.server)
+      .put("/me")
+      .set("Authorization", "Bearer anotherUserToken")
+      .send({
+        name: "John Doe",
+        email: "john.doe@example.com",
+        currentPassword: "JohnDoe123456",
+      });
+
+    expect(response.statusCode).toEqual(401);
+    expect(response.body).toEqual({
+      message: "Unauthorized. Invalid or expired token."
+    });
   });
 });
