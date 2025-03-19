@@ -44,4 +44,15 @@ export class MethodsUsersRepository implements UsersRepository {
 
     return result.rows[0] || null;
   }
+
+  async update(id: string, data: Partial<User>): Promise<User> {
+    const result = await query(
+      `UPDATE users 
+      SET name = $1, email = $2, password_hash = $3 
+      WHERE id = $4 
+      RETURNING *`,
+      [data.name ?? null, data.email ?? null, data.password_hash ?? null, id]
+    );
+    return result.rows[0];
+  }
 }
