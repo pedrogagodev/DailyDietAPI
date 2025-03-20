@@ -1,4 +1,5 @@
 import { DatabaseConnectionError } from "@/errors/database-connection-error";
+import { IncorrectPasswordError } from "@/errors/incorrect-password-error";
 import { InvalidMealDataError } from "@/errors/invalid-meal-data-error";
 import { InvalidPasswordError } from "@/errors/invalid-password-error";
 import { MealNotFoundError } from "@/errors/meal-not-found";
@@ -44,6 +45,13 @@ export function errorHandler(
 
   if (error instanceof InvalidPasswordError) {
     return reply.status(400).send(response);
+  }
+
+  if (error instanceof IncorrectPasswordError) {
+    return reply.status(400).send({
+      status: "error",
+      message: error.message,
+    });
   }
 
   if (error instanceof UnauthorizedAccessError) {
