@@ -14,11 +14,19 @@ import {
   createMealResponseSchema,
 } from "@/schemas/meals/create-meal-schema";
 import { getLongestOnDietSequenceResponseSchema } from "@/schemas/meals/get-longest-on-diet-sequence-schema";
-import { getMealInfoResponseSchema, getMealInfoSchema } from "@/schemas/meals/get-meal-info-schema";
+import {
+  getMealInfoResponseSchema,
+  getMealInfoSchema,
+} from "@/schemas/meals/get-meal-info-schema";
 import { getMealsOffDietNumberResponseSchema } from "@/schemas/meals/get-meals-off-diet-number-schema";
 import { getMealsOnDietNumberResponseSchema } from "@/schemas/meals/get-meals-on-diet-number-schema";
 import { getTotalMealsNumberResponseSchema } from "@/schemas/meals/get-total-meals-schema";
 import { listMealsResponseSchema } from "@/schemas/meals/list-meals-schema";
+import {
+  updateMealBodySchema,
+  updateMealResponseSchema,
+  updateMealSchema,
+} from "@/schemas/meals/update-meal-schema";
 import type { FastifyInstance } from "fastify";
 import type { FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi";
 
@@ -107,11 +115,20 @@ export async function mealsRoutes(app: FastifyInstance) {
     handler: getMealInfo,
   });
 
-  app.put(
-    "/me/meals/:mealId",
-    { onRequest: [ensureMealOwnershipMiddleware] },
-    updateMeal
-  );
+  app.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
+    method: "PUT",
+    url: "/me/meals/:mealId",
+    schema: {
+      params: updateMealSchema,
+      body: updateMealBodySchema,
+      tags: ["meals"],
+      summary: "Update meal",
+      description: "Update meal",
+      response: updateMealResponseSchema,
+    },
+    onRequest: [ensureMealOwnershipMiddleware],
+    handler: updateMeal,
+  });
 
   app.delete(
     "/me/meals/:mealId",
