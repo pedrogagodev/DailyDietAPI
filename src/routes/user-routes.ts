@@ -6,6 +6,10 @@ import { refresh } from "@/http/controllers/users/refresh";
 import { register } from "@/http/controllers/users/register";
 import { verifyJWT } from "@/http/middlewares/verify-jwt";
 import {
+  loginBodySchema,
+  loginResponseSchema,
+} from "@/schemas/users/login-schema";
+import {
   registerBodySchema,
   registerResponseSchema,
 } from "@/schemas/users/register-schema";
@@ -27,7 +31,20 @@ export async function usersRoutes(app: FastifyInstance) {
     handler: register,
   });
 
-  app.post("/login", authenticate);
+  app.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
+    method: "POST",
+    url: "/login",
+    schema: {
+      body: loginBodySchema,
+      tags: ["users"],
+      summary: "Login a user",
+      description: "Login a user",
+
+      response: loginResponseSchema,
+    },
+    onRequest: [verifyJWT],
+    handler: authenticate,
+  });
   app.patch("/token/refresh", refresh);
 
   app.get("/me", { onRequest: [verifyJWT] }, profile);
