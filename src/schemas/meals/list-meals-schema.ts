@@ -5,6 +5,7 @@ export const listMealsResponseSchema = {
     meals: z.array(
       z.object({
         id: z.string(),
+        userId: z.string(),
         name: z.string(),
         description: z.string().nullable(),
         isOnDiet: z.boolean(),
