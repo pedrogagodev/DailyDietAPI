@@ -37,8 +37,10 @@
     "config": "3.3.12",
     "dotenv": "16.4.7",
     "fastify": "5.2.1",
+    "fastify-zod-openapi": "4.1.1",
     "pg": "8.13.3",
-    "uuid": "11.1.0"
+    "uuid": "11.1.0",
+    "zod-openapi": "4.2.3"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
