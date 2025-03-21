@@ -64,7 +64,17 @@ export class MethodsMealsRepository implements MealsRepository {
       [userId, id]
     );
 
-    return result.rows[0];
+    const meal = result.rows[0];
+    return {
+      id: meal.id,
+      userId: meal.user_id,
+      name: meal.name,
+      description: meal.description,
+      dateTime: meal.date_time,
+      isOnDiet: meal.is_on_diet,
+      createdAt: meal.created_at,
+      updatedAt: meal.updated_at,
+    };
   }
   async listByUserId(userId: string): Promise<Meal[]> {
     const result = await query(
