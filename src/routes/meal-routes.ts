@@ -9,12 +9,28 @@ import { listMeals } from "@/http/controllers/meals/list-meals";
 import { updateMeal } from "@/http/controllers/meals/update-meal";
 import { ensureMealOwnershipMiddleware } from "@/http/middlewares/ensure-meal-ownership";
 import { verifyJWT } from "@/http/middlewares/verify-jwt";
+import {
+  createMealBodySchema,
+  createMealResponseSchema,
+} from "@/schemas/meals/create-meal-schema";
 import type { FastifyInstance } from "fastify";
+import type { FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi";
 
 export async function mealsRoutes(app: FastifyInstance) {
   app.addHook("onRequest", verifyJWT);
 
-  app.post("/meals", createMeal);
+  app.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
+    method: "POST",
+    url: "/meals",
+    schema: {
+      body: createMealBodySchema,
+      tags: ["meals"],
+      summary: "Create a new meal",
+      description: "Create a new meal",
+      response: createMealResponseSchema,
+    },
+    handler: createMeal,
+  });
 
   app.get("/me/meals", listMeals);
   app.get("/me/meals/total", getTotalMealsNumber);
