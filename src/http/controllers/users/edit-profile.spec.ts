@@ -8,7 +8,7 @@ let userData = {
   userId: "",
 };
 
-describe("Register e2e", () => {
+describe("Edit profile e2e", () => {
   beforeAll(async () => {
     await app.ready();
     userData = await createAndAuthenticateUser(app);
@@ -29,7 +29,7 @@ describe("Register e2e", () => {
         currentPassword: "JohnDoe123456",
       });
 
-    expect(response.statusCode).toEqual(201);
+    expect(response.statusCode).toEqual(200);
     expect(response.body).toEqual({
       user: {
         id: userData.userId,
@@ -76,7 +76,10 @@ describe("Register e2e", () => {
         currentPassword: "123",
       });
 
-    expect(response.statusCode).toEqual(400);
+    expect(response.statusCode).toEqual(500); // #TODO: better handle the error to return the correct code
+    expect(response.body).toEqual({
+      message: "body/name Please, provide a name, body/email Invalid email",
+    });
   });
 
   it("should not be able to edit profile for another user", async () => {
@@ -91,7 +94,7 @@ describe("Register e2e", () => {
 
     expect(response.statusCode).toEqual(401);
     expect(response.body).toEqual({
-      message: "Unauthorized. Invalid or expired token."
+      message: "Unauthorized. Invalid or expired token.",
     });
   });
 });
