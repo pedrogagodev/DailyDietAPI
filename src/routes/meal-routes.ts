@@ -13,6 +13,7 @@ import {
   createMealBodySchema,
   createMealResponseSchema,
 } from "@/schemas/meals/create-meal-schema";
+import { getMealsOffDietNumberResponseSchema } from "@/schemas/meals/get-meals-off-diet-number-schema";
 import { getMealsOnDietNumberResponseSchema } from "@/schemas/meals/get-meals-on-diet-number-schema";
 import { getTotalMealsNumberResponseSchema } from "@/schemas/meals/get-total-meals-schema";
 import { listMealsResponseSchema } from "@/schemas/meals/list-meals-schema";
@@ -68,7 +69,17 @@ export async function mealsRoutes(app: FastifyInstance) {
     },
     handler: getMealsOnDietNumber,
   });
-  app.get("/me/meals/off-diet", getMealsOffDietNumber);
+  app.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
+    method: "GET",
+    url: "/me/meals/off-diet",
+    schema: {
+      tags: ["meals"],
+      summary: "Get meals off diet number",
+      description: "Get meals off diet number",
+      response: getMealsOffDietNumberResponseSchema,
+    },
+    handler: getMealsOffDietNumber,
+  });
   app.get("/me/meals/longest-on-diet-sequence", getLongestOnDietSequence);
   app.get(
     "/me/meals/:mealId",
