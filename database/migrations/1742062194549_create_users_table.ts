@@ -5,26 +5,16 @@ const shorthands: ColumnDefinitions | undefined = undefined;
 export const up = async (pgm: MigrationBuilder): Promise<void> => {
   pgm.createExtension("uuid-ossp", { ifNotExists: true, schema: "public" });
 
-  pgm.createTable("users", {
-    id: {
-      type: "uuid",
-      primaryKey: true,
-      default: pgm.func("public.uuid_generate_v4()"),
-    },
-    name: { type: "varchar(255)", notNull: true },
-    email: { type: "varchar(255)", notNull: true, unique: true },
-    password_hash: { type: "varchar(255)", notNull: true },
-    created_at: {
-      type: "timestamp",
-      notNull: true,
-      default: pgm.func("CURRENT_TIMESTAMP"),
-    },
-    updated_at: {
-      type: "timestamp",
-      notNull: true,
-      default: pgm.func("CURRENT_TIMESTAMP"),
-    },
-  });
+  pgm.sql(`
+    CREATE TABLE IF NOT EXISTS "users" (
+      "id" uuid DEFAULT public.uuid_generate_v4() PRIMARY KEY,
+      "name" varchar(255) NOT NULL,
+      "email" varchar(255) UNIQUE NOT NULL,
+      "password_hash" varchar(255) NOT NULL,
+      "created_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+      "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
+    );
+  `);
 };
 
 export const down = async (pgm: MigrationBuilder): Promise<void> => {
