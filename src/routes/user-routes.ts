@@ -5,6 +5,10 @@ import { profile } from "@/http/controllers/users/profile";
 import { refresh } from "@/http/controllers/users/refresh";
 import { register } from "@/http/controllers/users/register";
 import { verifyJWT } from "@/http/middlewares/verify-jwt";
+import {
+  editProfileBodySchema,
+  editProfileResponseSchema,
+} from "@/schemas/users/edit-profile-schema";
 import { getProfileResponseSchema } from "@/schemas/users/get-profile-schema";
 import {
   loginBodySchema,
@@ -81,6 +85,19 @@ export async function usersRoutes(app: FastifyInstance) {
     onRequest: [verifyJWT],
     handler: profile,
   });
-  app.put("/me", { onRequest: [verifyJWT] }, editProfile);
+  app.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
+    method: "PUT",
+    url: "/me",
+    schema: {
+      body: editProfileBodySchema,
+      tags: ["users"],
+      summary: "Edit the current user's profile",
+      description: "Edit the current user's profile",
+
+      response: editProfileResponseSchema,
+    },
+    onRequest: [verifyJWT],
+    handler: editProfile,
+  });
   app.put("/me/password", { onRequest: [verifyJWT] }, changePassword);
 }
