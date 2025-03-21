@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "build/server.js",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "start:dev": "tsx watch src/server.ts",
     "start:prod": "node build/server.js",
