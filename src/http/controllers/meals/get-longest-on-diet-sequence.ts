@@ -13,5 +13,7 @@ export async function getLongestOnDietSequence(
     requestingUserId: userId,
   });
 
-  return reply.status(200).send({ mealsSequence: Number(mealsSequence) });
+  return reply.status(200).send({
+    longestOnDietSequence: Number(mealsSequence),
+  });
 }

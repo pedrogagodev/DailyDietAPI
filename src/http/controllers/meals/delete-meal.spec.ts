@@ -21,7 +21,7 @@ describe("Delete Meal e2e", () => {
     const { token, userId } = userData;
 
     const createMealResponse = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
@@ -32,11 +32,11 @@ describe("Delete Meal e2e", () => {
 
     expect(createMealResponse.statusCode).toEqual(201);
 
-    const { data } = createMealResponse.body;
-    const mealId = data.meal.id;
+    const { meal } = createMealResponse.body;
+    const mealId = meal.id;
 
     const deleteMealResponse = await request(app.server)
-      .delete(`/meals/${mealId}`)
+      .delete(`/me/meals/${mealId}`)
       .set("Authorization", `Bearer ${token}`);
 
     expect(deleteMealResponse.statusCode).toEqual(200);
@@ -46,7 +46,7 @@ describe("Delete Meal e2e", () => {
     const { token, userId } = userData;
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
@@ -54,9 +54,8 @@ describe("Delete Meal e2e", () => {
       });
 
     const deleteMealResponse = await request(app.server)
-      .delete("/meals/null-meal-id")
+      .delete("/me/meals/null-meal-id")
       .set("Authorization", `Bearer ${token}`);
-    console.log("🚨🚨🚨🚨 deleteMealResponse.body", deleteMealResponse.body);
     expect(deleteMealResponse.statusCode).toEqual(400);
     expect(deleteMealResponse.body).toEqual({
       message: "Invalid meal ID format",
@@ -66,7 +65,7 @@ describe("Delete Meal e2e", () => {
 
   it("not should to be delete meal without token", async () => {
     const deleteMealResponse = await request(app.server)
-      .delete("/meals/invalid-meal-id")
+      .delete("/me/meals/invalid-meal-id")
       .set("Authorization", "Bearer invalid-token");
 
     expect(deleteMealResponse.statusCode).toEqual(401);
@@ -79,7 +78,7 @@ describe("Delete Meal e2e", () => {
     const { token } = userData;
 
     const createMealResponse = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
@@ -94,11 +93,11 @@ describe("Delete Meal e2e", () => {
       false
     );
 
-    const { data } = createMealResponse.body;
-    const mealId = data.meal.id;
+    const { meal } = createMealResponse.body;
+    const mealId = meal.id;
 
     const deleteMealResponse = await request(app.server)
-      .delete(`/meals/${mealId}`)
+      .delete(`/me/meals/${mealId}`)
       .set("Authorization", `Bearer ${anotherUserToken}`);
 
     expect(deleteMealResponse.statusCode).toEqual(403);

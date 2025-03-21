@@ -23,7 +23,7 @@ describe("Get Total Meals Number e2e", () => {
     const { token } = userData;
 
     const createMealResponse = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
@@ -58,7 +58,7 @@ describe("Get Total Meals Number e2e", () => {
     const firstUser = await createAndAuthenticateUser(app, false);
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${firstUser.token}`)
       .send({
         name: "First user meal",
@@ -67,7 +67,7 @@ describe("Get Total Meals Number e2e", () => {
       });
 
       await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${firstUser.token}`)
       .send({
         name: "Second meal of first user",
@@ -78,7 +78,7 @@ describe("Get Total Meals Number e2e", () => {
     const secondUser = await createAndAuthenticateUser(app, false);
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${secondUser.token}`)
       .send({
         name: "Second user meal",

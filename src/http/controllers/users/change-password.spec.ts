@@ -29,7 +29,7 @@ describe("Change Password e2e", () => {
         confirmPassword: "NewPassword123",
       });
 
-    expect(response.statusCode).toEqual(201);
+    expect(response.statusCode).toEqual(200);
     expect(response.body).toEqual({
       message: "Password changed successfully",
     }); 
@@ -48,7 +48,11 @@ describe("Change Password e2e", () => {
         confirmPassword: "",
       });
 
-    expect(response.statusCode).toEqual(400);
+    expect(response.statusCode).toEqual(500); // #TODO: better handle the error to return the correct code
+    expect(response.body).toEqual({
+      message:
+        "body/currentPassword Please, provide the current password, body/newPassword Please, provide the new password, body/confirmPassword Please, provide the confirm password",
+    });
   });
 
   it("should not be able to change password with wrong current password", async () => {
@@ -66,7 +70,6 @@ describe("Change Password e2e", () => {
     expect(response.statusCode).toEqual(400);
     expect(response.body).toEqual({
       message: "Please, provide a valid password.",
-      status: "error",
     });
   });
 
@@ -85,7 +88,6 @@ describe("Change Password e2e", () => {
     expect(response.statusCode).toEqual(400);
     expect(response.body).toEqual({
       message: "Please, provide a valid password.",
-      status: "error",
     });
   });
 

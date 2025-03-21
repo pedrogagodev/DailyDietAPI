@@ -14,7 +14,11 @@ export async function getMealInfo(
   const userId = request.user.sub;
 
   const getMealInfoUseCase = makeGetMealInfoUseCase();
-  const meal = await getMealInfoUseCase.execute({ mealId, userId, requestingUserId: userId });
+  const meal = await getMealInfoUseCase.execute({
+    mealId,
+    userId,
+    requestingUserId: userId,
+  });
 
-  return reply.status(200).send({ data: meal });
+  return reply.status(200).send( meal );
 }

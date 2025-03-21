@@ -1,22 +1,17 @@
 import { makeEditProfileUseCase } from "@/use-cases/factories/make-edit-profile-use-case";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { z } from "zod";
+
+type EditProfileBody = {
+  name: string;
+  email: string;
+  currentPassword: string;
+};
 
 export async function editProfile(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const editProfileSchema = z.object({
-    name: z.string().min(1, { message: "Please, provide a name" }),
-    email: z.string().email({ message: "Invalid email" }),
-    currentPassword: z
-      .string()
-      .min(1, { message: "Please, provide the current password" }),
-  });
-
-  const { name, email, currentPassword } = editProfileSchema.parse(
-    request.body
-  );
+  const { name, email, currentPassword } = request.body as EditProfileBody;
 
   const editProfileUseCase = makeEditProfileUseCase();
 
@@ -28,7 +23,7 @@ export async function editProfile(
     currentPassword,
   });
 
-  return reply.status(201).send({
+  return reply.status(200).send({
     user: {
       id: user.id,
       name: user.name,

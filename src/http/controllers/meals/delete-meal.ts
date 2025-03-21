@@ -1,13 +1,12 @@
 import { makeDeleteMealUseCase } from "@/use-cases/factories/make-delete-meal-use-case";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { z } from "zod";
+
+type DeleteMealParams = {
+  mealId: string;
+};
 
 export async function deleteMeal(request: FastifyRequest, reply: FastifyReply) {
-  const deleteMealSchema = z.object({
-    mealId: z.string().uuid({ message: "Invalid meal id." }),
-  });
-
-  const { mealId } = deleteMealSchema.parse(request.params);
+  const { mealId } = request.params as DeleteMealParams;
   const userId = request.user.sub;
   const deleteMealUseCase = makeDeleteMealUseCase();
   await deleteMealUseCase.execute({ id: mealId, requestingUserId: userId });

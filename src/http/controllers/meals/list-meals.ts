@@ -11,5 +11,5 @@ export async function listMeals(request: FastifyRequest, reply: FastifyReply) {
     requestingUserId: userId,
   });
 
-  return reply.status(200).send({ data: meals });
+  return reply.status(200).send(meals);
 }

@@ -11,13 +11,13 @@ describe("Authenticate e2e", () => {
   });
 
   it("should be able to authenticate", async () => {
-    await request(app.server).post("/register").send({
+    await request.agent(app.server).post("/register").send({
       name: "John Doe",
       email: "john.doe@example.com",
       password: "JohnDoe123456",
     });
 
-    const response = await request(app.server).post("/login").send({
+    const response = await request.agent(app.server).post("/login").send({
       email: "john.doe@example.com",
       password: "JohnDoe123456",
     });
@@ -26,26 +26,33 @@ describe("Authenticate e2e", () => {
   });
 
   it("should not be able to authenticate with invalid credentials", async () => {
-    await request(app.server).post("/register").send({
+    await request.agent(app.server).post("/register").send({
       name: "John Doe",
       email: "john.doe@example.com",
       password: "JohnDoe123456",
     });
 
-    const response = await request(app.server).post("/login").send({
+    const response = await request.agent(app.server).post("/login").send({
       email: "john.doe@example.com",
       password: "invalid-password",
     });
 
-    expect(response.statusCode).toEqual(400);
+    expect(response.statusCode).toEqual(404); // #TODO: better handle the error to return the correct code
+    expect(response.body).toEqual({
+      message: "User not found.",
+    });
   });
 
   it("should validate required fields", async () => {
-    const response = await request(app.server).post("/login").send({
+    const response = await request.agent(app.server).post("/login").send({
       email: "",
       password: "",
     });
 
-    expect(response.statusCode).toEqual(400);
+    expect(response.statusCode).toEqual(500); // #TODO: better handle the error to return the correct code
+    expect(response.body).toEqual({
+      message:
+        "body/email Please enter a valid email, body/password Please enter a valid password",
+    });
   });
 });

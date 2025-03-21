@@ -22,7 +22,7 @@ describe("List Meals e2e", () => {
     const { token } = userData;
 
     const createMealResponse = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
@@ -34,6 +34,7 @@ describe("List Meals e2e", () => {
     const listMealsResponse = await request(app.server)
       .get("/me/meals")
       .set("Authorization", `Bearer ${token}`);
+
 
     expect(listMealsResponse.statusCode).toEqual(200);
     expect(listMealsResponse.body).toEqual(expect.any(Object));
@@ -54,7 +55,7 @@ describe("List Meals e2e", () => {
     const firstUser = await createAndAuthenticateUser(app, false);
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${firstUser.token}`)
       .send({
         name: "First user meal",
@@ -65,7 +66,7 @@ describe("List Meals e2e", () => {
     const secondUser = await createAndAuthenticateUser(app, false);
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${secondUser.token}`)
       .send({
         name: "Second user meal",
@@ -79,12 +80,12 @@ describe("List Meals e2e", () => {
 
     expect(listMealsResponse.statusCode).toEqual(200);
 
-
-    const meals = listMealsResponse.body.data.meals;
+    const meals = listMealsResponse.body.meals;
     expect(Array.isArray(meals)).toBe(true);
 
+
     for (const meal of meals) {
-      expect(meal.user_id).toEqual(secondUser.userId);
+      expect(meal.userId).toEqual(secondUser.userId);
     }
 
     const mealNames = meals.map((meal: Meal) => meal.name);

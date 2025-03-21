@@ -23,7 +23,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
     const { token } = userData;
 
     const createMealResponse = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Bread with eggs",
@@ -32,7 +32,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
       });
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Bread with eggs",
@@ -41,7 +41,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
       });
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Bread with eggs",
@@ -57,7 +57,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
 
     expect(getLongestOnDietSequenceResponse.statusCode).toEqual(200);
     expect(getLongestOnDietSequenceResponse.body).toEqual({
-      mealsSequence: 3,
+        longestOnDietSequence: 3,
     });
   });
 
@@ -76,7 +76,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
     const firstUser = await createAndAuthenticateUser(app, false);
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${firstUser.token}`)
       .send({
         name: "First user meal",
@@ -85,7 +85,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
       });
 
       await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${firstUser.token}`)
       .send({
         name: "Second meal of first user",
@@ -94,7 +94,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
       });
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${firstUser.token}`)
       .send({
         name: "Third meal of first user",
@@ -103,7 +103,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
       });
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${firstUser.token}`)
       .send({
         name: "Fourth meal of first user",
@@ -114,7 +114,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
     const secondUser = await createAndAuthenticateUser(app, false);
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${secondUser.token}`)
       .send({
         name: "Second user meal",
@@ -128,7 +128,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
 
     expect(getLongestOnDietSequenceResponseOfFirstUser.statusCode).toEqual(200);
     expect(getLongestOnDietSequenceResponseOfFirstUser.body).toEqual({
-      mealsSequence: 2,
+      longestOnDietSequence: 2,
     });
 
     const getLongestOnDietSequenceResponseOfSecondUser = await request(app.server)
@@ -137,7 +137,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
 
     expect(getLongestOnDietSequenceResponseOfSecondUser.statusCode).toEqual(200);
     expect(getLongestOnDietSequenceResponseOfSecondUser.body).toEqual({
-      mealsSequence: 0,
+      longestOnDietSequence: 0,
     });
 
   });
