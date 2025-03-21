@@ -21,7 +21,7 @@ export async function mealsRoutes(app: FastifyInstance) {
 
   app.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
     method: "POST",
-    url: "/meals",
+    url: "/me/meals",
     schema: {
       body: createMealBodySchema,
       tags: ["meals"],
@@ -38,19 +38,19 @@ export async function mealsRoutes(app: FastifyInstance) {
   app.get("/me/meals/off-diet", getMealsOffDietNumber);
   app.get("/me/meals/longest-on-diet-sequence", getLongestOnDietSequence);
   app.get(
-    "/meals/:mealId",
+    "/me/meals/:mealId",
     { onRequest: [ensureMealOwnershipMiddleware] },
     getMealInfo
   );
 
   app.put(
-    "/meals/:mealId",
+    "/me/meals/:mealId",
     { onRequest: [ensureMealOwnershipMiddleware] },
     updateMeal
   );
 
   app.delete(
-    "/meals/:mealId",
+    "/me/meals/:mealId",
     { onRequest: [ensureMealOwnershipMiddleware] },
     deleteMeal
   );
