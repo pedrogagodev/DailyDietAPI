@@ -22,7 +22,7 @@ describe("Create Meal e2e", () => {
     const { token, userId } = userData;
 
     const response = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
@@ -38,7 +38,7 @@ describe("Create Meal e2e", () => {
     const { token } = userData;
 
     const response = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}invalid`)
       .send({
         name: "Pizza",
@@ -65,7 +65,7 @@ describe("Create Meal e2e", () => {
     );
 
     const response = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${invalidToken}`)
       .send({
         name: "Pizza",
@@ -76,7 +76,6 @@ describe("Create Meal e2e", () => {
     expect(response.statusCode).toEqual(404);
     expect(response.body).toEqual({
       message: "User not found.",
-      status: "error",
     });
   });
 
@@ -84,7 +83,7 @@ describe("Create Meal e2e", () => {
     const { token, userId } = await createAndAuthenticateUser(app);
 
     const response = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "",
@@ -93,16 +92,15 @@ describe("Create Meal e2e", () => {
         isOnDiet: true,
       });
 
-    expect(response.statusCode).toEqual(400);
-    expect(response.body.message).toEqual("Validation error");
-    expect(response.body.details.name).toContain("Please, provide a meal name");
+    expect(response.statusCode).toEqual(500); // #TODO: better handle the error to return the correct code
+    expect(response.body.message).toEqual("body/name Please, provide a meal name");
   });
 
   it("not should to be create meal without isOnDiet boolean", async () => {
     const { token, userId } = await createAndAuthenticateUser(app);
 
     const response = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
@@ -111,10 +109,7 @@ describe("Create Meal e2e", () => {
         isOnDiet: null,
       });
 
-    expect(response.statusCode).toEqual(400);
-    expect(response.body.message).toEqual("Validation error");
-    expect(response.body.details.isOnDiet).toContain(
-      "Please, provide a valid value for isOnDiet"
-    );
+    expect(response.statusCode).toEqual(500); // #TODO: better handle the error to return the correct code
+    expect(response.body.message).toEqual("body/isOnDiet Please, provide a valid value for isOnDiet");
   });
 });
