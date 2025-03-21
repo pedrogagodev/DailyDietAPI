@@ -45,7 +45,27 @@ export async function usersRoutes(app: FastifyInstance) {
     onRequest: [verifyJWT],
     handler: authenticate,
   });
-  app.patch("/token/refresh", refresh);
+  app.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
+    method: "PATCH",
+    url: "/token/refresh",
+    schema: {
+      tags: ["users"],
+      summary: "Refresh a user's token",
+      description: "Refresh a user's token",
+
+      response: {
+        200: {
+          description: "Token refreshed successfully",
+          type: "object",
+          properties: {
+            token: { type: "string" },
+          },
+        },
+      },
+    },
+    onRequest: [verifyJWT],
+    handler: refresh,
+  });
 
   app.get("/me", { onRequest: [verifyJWT] }, profile);
   app.put("/me", { onRequest: [verifyJWT] }, editProfile);
