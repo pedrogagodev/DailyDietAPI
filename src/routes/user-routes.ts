@@ -5,10 +5,27 @@ import { profile } from "@/http/controllers/users/profile";
 import { refresh } from "@/http/controllers/users/refresh";
 import { register } from "@/http/controllers/users/register";
 import { verifyJWT } from "@/http/middlewares/verify-jwt";
+import {
+  registerBodySchema,
+  registerResponseSchema,
+} from "@/schemas/users/register-schema";
 import type { FastifyInstance } from "fastify";
+import type { FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi";
 
 export async function usersRoutes(app: FastifyInstance) {
-  app.post("/register", register);
+  app.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
+    method: "POST",
+    url: "/register",
+    schema: {
+      body: registerBodySchema,
+      tags: ["users"],
+      summary: "Register a new user",
+      description: "Register a new user",
+
+      response: registerResponseSchema,
+    },
+    handler: register,
+  });
 
   app.post("/login", authenticate);
   app.patch("/token/refresh", refresh);
