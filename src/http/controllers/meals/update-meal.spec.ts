@@ -21,7 +21,7 @@ describe("Update Meal e2e", () => {
     const { token } = userData;
 
     const createMealResponse = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
@@ -30,11 +30,11 @@ describe("Update Meal e2e", () => {
       });
     expect(createMealResponse.statusCode).toEqual(201);
 
-    const { data } = createMealResponse.body;
-    const mealId = data.meal.id;
+    const { meal } = createMealResponse.body;
+    const mealId = meal.id;
 
     const updateMealResponse = await request(app.server)
-      .put(`/meals/${mealId}`)
+      .put(`/me/meals/${mealId}`)
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Lunch",
@@ -47,7 +47,7 @@ describe("Update Meal e2e", () => {
 
   it("not should to be update meal without token", async () => {
     const updateMealResponse = await request(app.server)
-      .put("/meals/invalid-meal-id")
+      .put("/me/meals/invalid-meal-id")
       .set("Authorization", "Bearer invalid-token");
 
     expect(updateMealResponse.statusCode).toEqual(401);
@@ -60,7 +60,7 @@ describe("Update Meal e2e", () => {
     const { token } = userData;
 
     const createMealResponse = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
@@ -74,12 +74,12 @@ describe("Update Meal e2e", () => {
       app,
       false,
     );
-
-    const { data } = createMealResponse.body;
-    const mealId = data.meal.id;
+ 
+    const { meal } = createMealResponse.body;
+    const mealId = meal.id;
 
     const updateMealResponse = await request(app.server)
-      .put(`/meals/${mealId}`)
+      .put(`/me/meals/${mealId}`)
       .set("Authorization", `Bearer ${anotherUserToken}`)
       .send({
         name: "Pizza with cheese and pepperoni",
