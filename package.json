@@ -11,7 +11,7 @@
     "start:prod": "node build/server.js",
     "build": "tsup src --out-dir build",
     "migrate:up": "tsx node_modules/.bin/node-pg-migrate up --migrations-dir database/migrations",
-    "migrate:up:prod": "node-pg-migrate up --migrations-dir build/database/migrations --config-value db",
+    "migrate:up:prod": "cp -r database/migrations build/database/migrations && node-pg-migrate up --migrations-dir build/database/migrations --config-value db",
     "migrate:down": "tsx node_modules/.bin/node-pg-migrate down --migrations-dir database/migrations",
     "migrate:down:prod": "node-pg-migrate down --migrations-dir build/database/migrations --config-value db",
     "migrate:create": "tsx node_modules/.bin/node-pg-migrate create minha_migracao --migrations-dir database/migrations --migration-file-language ts",
