@@ -76,7 +76,17 @@ export class MethodsMealsRepository implements MealsRepository {
       [userId]
     );
 
-    return result.rows;
+    const meals = result.rows;
+    return meals.map(meal => ({
+      id: meal.id,
+      userId: meal.user_id,
+      name: meal.name,
+      description: meal.description,
+      dateTime: meal.date_time,
+      isOnDiet: meal.is_on_diet,
+      createdAt: meal.created_at,
+      updatedAt: meal.updated_at,
+    }));
   }
   async update(id: string, data: UpdateMealData): Promise<Meal> {
     const result = await query(
