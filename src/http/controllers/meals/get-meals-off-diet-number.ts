@@ -13,5 +13,5 @@ export async function getMealsOffDietNumber(
     requestingUserId: userId,
   });
 
-  return reply.status(200).send({ mealsNumber });
+  return reply.status(200).send({ mealsOffDietNumber: mealsNumber });
 }
