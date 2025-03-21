@@ -35,6 +35,15 @@ app.register(fastifySwagger, {
       version: "1.0.0",
     },
     openapi: "3.0.3" satisfies ZodOpenApiVersion,
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
   },
   transform: fastifyZodOpenApiTransform,
   transformObject: fastifyZodOpenApiTransformObject,
