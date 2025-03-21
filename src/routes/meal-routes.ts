@@ -13,6 +13,7 @@ import {
   createMealBodySchema,
   createMealResponseSchema,
 } from "@/schemas/meals/create-meal-schema";
+import { listMealsResponseSchema } from "@/schemas/meals/list-meals-schema";
 import type { FastifyInstance } from "fastify";
 import type { FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi";
 
@@ -32,7 +33,17 @@ export async function mealsRoutes(app: FastifyInstance) {
     handler: createMeal,
   });
 
-  app.get("/me/meals", listMeals);
+  app.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
+    method: "GET",
+    url: "/me/meals",
+    schema: {
+      tags: ["meals"],
+      summary: "List all meals",
+      description: "List all meals",
+      response: listMealsResponseSchema,
+    },
+    handler: listMeals,
+  });
   app.get("/me/meals/total", getTotalMealsNumber);
   app.get("/me/meals/on-diet", getMealsOnDietNumber);
   app.get("/me/meals/off-diet", getMealsOffDietNumber);
