@@ -21,7 +21,7 @@ describe("Get Total Meals On Diet Number e2e", () => {
     const { token } = userData;
 
     const createMealResponse = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
@@ -37,7 +37,7 @@ describe("Get Total Meals On Diet Number e2e", () => {
 
     expect(getMealsOnDietNumberResponse.statusCode).toEqual(200);
     expect(getMealsOnDietNumberResponse.body).toEqual({
-      mealsNumber: 1,
+      mealsOnDietNumber: 1,
     });
   });
 
@@ -55,7 +55,7 @@ describe("Get Total Meals On Diet Number e2e", () => {
     const firstUser = await createAndAuthenticateUser(app, false);
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${firstUser.token}`)
       .send({
         name: "First user meal",
@@ -64,7 +64,7 @@ describe("Get Total Meals On Diet Number e2e", () => {
       });
 
       await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${firstUser.token}`)
       .send({
         name: "Second meal of first user",
@@ -75,7 +75,7 @@ describe("Get Total Meals On Diet Number e2e", () => {
     const secondUser = await createAndAuthenticateUser(app, false);
 
     await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${secondUser.token}`)
       .send({
         name: "Second user meal",
@@ -89,7 +89,7 @@ describe("Get Total Meals On Diet Number e2e", () => {
 
     expect(getMealsOnDietNumberResponseOfFirstUser.statusCode).toEqual(200);
     expect(getMealsOnDietNumberResponseOfFirstUser.body).toEqual({
-      mealsNumber: 1,
+      mealsOnDietNumber: 1,
     });
 
     const getMealsOnDietNumberResponseOfSecondUser = await request(app.server)
@@ -98,7 +98,7 @@ describe("Get Total Meals On Diet Number e2e", () => {
 
     expect(getMealsOnDietNumberResponseOfSecondUser.statusCode).toEqual(200);
     expect(getMealsOnDietNumberResponseOfSecondUser.body).toEqual({
-      mealsNumber: 0,
+      mealsOnDietNumber: 0,
     });
 
   });
