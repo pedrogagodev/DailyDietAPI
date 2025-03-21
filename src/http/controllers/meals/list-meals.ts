@@ -6,10 +6,15 @@ export async function listMeals(request: FastifyRequest, reply: FastifyReply) {
 
   const listMealsUseCase = makeListMealsUseCase();
 
-  const meals = await listMealsUseCase.execute({
+  const response = await listMealsUseCase.execute({
     userId: userId,
     requestingUserId: userId,
   });
 
-  return reply.status(200).send({ data: meals });
+  return reply.status(200).send({
+    meals: response.meals.map(meal => ({
+      ...meal,
+      userId: undefined,
+    })),
+  });
 }
