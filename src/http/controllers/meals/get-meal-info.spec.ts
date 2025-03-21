@@ -21,7 +21,7 @@ describe("Get Meal Info e2e", () => {
     const { token, userId } = userData;
 
     const createMealResponse = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
@@ -31,12 +31,12 @@ describe("Get Meal Info e2e", () => {
       });
 
     expect(createMealResponse.statusCode).toEqual(201);
-
-    const { data } = createMealResponse.body;
-    const mealId = data.meal.id;
+      
+    const { meal } = createMealResponse.body;
+    const mealId = meal.id;
 
     const getMealInfoResponse = await request(app.server)
-      .get(`/meals/${mealId}`)
+      .get(`/me/meals/${mealId}`)
       .set("Authorization", `Bearer ${token}`);
 
     expect(getMealInfoResponse.statusCode).toEqual(200);
@@ -49,7 +49,7 @@ describe("Get Meal Info e2e", () => {
     const nullMealId = null;
 
     const getMealInfoResponse = await request(app.server)
-      .get(`/meals/${nullMealId}`)
+      .get(`/me/meals/${nullMealId}`)
       .set("Authorization", `Bearer ${token}`);
 
     expect(getMealInfoResponse.statusCode).toEqual(400);
@@ -61,7 +61,7 @@ describe("Get Meal Info e2e", () => {
 
   it("not should to be get meal info without token", async () => {
     const getMealInfoResponse = await request(app.server)
-      .get("/meals/invalid-meal-id")
+      .get("/me/meals/invalid-meal-id")
       .set("Authorization", "Bearer invalid-token");
 
     expect(getMealInfoResponse.statusCode).toEqual(401);
@@ -74,7 +74,7 @@ describe("Get Meal Info e2e", () => {
     const { token } = userData;
 
     const createMealResponse = await request(app.server)
-      .post("/meals")
+      .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
@@ -89,11 +89,11 @@ describe("Get Meal Info e2e", () => {
       false
     );
 
-    const { data } = createMealResponse.body;
-    const mealId = data.meal.id;
+    const { meal } = createMealResponse.body;
+    const mealId = meal.id;
 
     const getMealInfoResponse = await request(app.server)
-      .get(`/meals/${mealId}`)
+      .get(`/me/meals/${mealId}`)
       .set("Authorization", `Bearer ${anotherUserToken}`);
 
     expect(getMealInfoResponse.statusCode).toEqual(403);
