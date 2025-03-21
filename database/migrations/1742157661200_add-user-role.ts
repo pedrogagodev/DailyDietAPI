@@ -3,8 +3,9 @@ import type { ColumnDefinitions, MigrationBuilder } from "node-pg-migrate";
 export const shorthands: ColumnDefinitions | undefined = undefined;
 
 export async function up(pgm: MigrationBuilder): Promise<void> {
-
-  pgm.createType("user_role", ["ADMIN", "USER"]);
+  pgm.sql(`
+    CREATE TYPE IF NOT EXISTS "user_role" AS ENUM ('ADMIN', 'USER');
+  `);
 
   pgm.addColumn("users", {
     role: {
@@ -17,5 +18,8 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
 
 export async function down(pgm: MigrationBuilder): Promise<void> {
   pgm.dropColumn("users", "role");
-  pgm.dropType("user_role");
+
+  pgm.sql(`
+    DROP TYPE IF EXISTS "user_role";
+  `);
 }
