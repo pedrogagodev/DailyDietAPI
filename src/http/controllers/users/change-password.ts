@@ -1,22 +1,18 @@
 import { makeChangePasswordUseCase } from "@/use-cases/factories/make-change-password-use-case";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { z } from "zod";
+
+type ChangePasswordBody = {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
 
 export async function changePassword(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const changePasswordSchema = z.object({
-    currentPassword: z
-      .string()
-      .min(1, { message: "Please, provide the current password" }),
-    newPassword: z.string().min(1, { message: "Please, provide the new password" }),
-    confirmPassword: z.string().min(1, { message: "Please, provide the confirm password" }),
-  });
-
-  const { currentPassword, newPassword, confirmPassword } = changePasswordSchema.parse(
-    request.body
-  );
+  const { currentPassword, newPassword, confirmPassword } =
+    request.body as ChangePasswordBody;
 
   const changePasswordUseCase = makeChangePasswordUseCase();
 
@@ -28,7 +24,7 @@ export async function changePassword(
     confirmPassword,
   });
 
-  return reply.status(201).send({
+  return reply.status(200).send({
     message: "Password changed successfully",
   });
 }
