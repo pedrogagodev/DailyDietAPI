@@ -13,6 +13,8 @@ import {
   createMealBodySchema,
   createMealResponseSchema,
 } from "@/schemas/meals/create-meal-schema";
+import { deleteMealSchema } from "@/schemas/meals/delete-meal-schema";
+import { deleteMealResponseSchema } from "@/schemas/meals/delete-meal-schema";
 import { getLongestOnDietSequenceResponseSchema } from "@/schemas/meals/get-longest-on-diet-sequence-schema";
 import {
   getMealInfoResponseSchema,
@@ -130,9 +132,17 @@ export async function mealsRoutes(app: FastifyInstance) {
     handler: updateMeal,
   });
 
-  app.delete(
-    "/me/meals/:mealId",
-    { onRequest: [ensureMealOwnershipMiddleware] },
-    deleteMeal
-  );
+  app.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
+    method: "DELETE",
+    url: "/me/meals/:mealId",
+    schema: {
+      params: deleteMealSchema,
+      tags: ["meals"],
+      summary: "Delete meal",
+      description: "Delete meal",
+      response: deleteMealResponseSchema,
+    },
+    onRequest: [ensureMealOwnershipMiddleware],
+    handler: deleteMeal,
+  });
 }
