@@ -1,22 +1,19 @@
 import { makeUpdateMealUseCase } from "@/use-cases/factories/make-update-meal-use-case";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { z } from "zod";
+
+type UpdateMealParams = {
+  mealId: string;
+};
+
+type UpdateMealBody = {
+  name: string;
+  description: string;
+  isOnDiet: boolean;
+};
 
 export async function updateMeal(request: FastifyRequest, reply: FastifyReply) {
-  const updateMealBodySchema = z.object({
-    name: z.string().optional(),
-    description: z.string().optional(),
-    isOnDiet: z.boolean().optional(),
-  });
-
-  const updateMealQuerySchema = z.object({
-    mealId: z.string().min(1, { message: "Please, provide a meal id" }),
-  });
-
-  const { mealId } = updateMealQuerySchema.parse(request.params);
-  const { name, description, isOnDiet } = updateMealBodySchema.parse(
-    request.body
-  );
+  const { mealId } = request.params as UpdateMealParams;
+  const { name, description, isOnDiet } = request.body as UpdateMealBody;
   const updateMealUseCase = makeUpdateMealUseCase();
 
   const { updatedMeal } = await updateMealUseCase.execute({
@@ -29,5 +26,7 @@ export async function updateMeal(request: FastifyRequest, reply: FastifyReply) {
     requestingUserId: request.user.sub,
   });
 
-  return reply.status(200).send({ data: updatedMeal });
+  return reply
+    .status(200)
+    .send({ meal: { ...updatedMeal, userId: undefined } });
 }
