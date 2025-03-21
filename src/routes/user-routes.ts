@@ -49,7 +49,6 @@ export async function usersRoutes(app: FastifyInstance) {
 
       response: loginResponseSchema,
     },
-    onRequest: [verifyJWT],
     handler: authenticate,
   });
   app.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
