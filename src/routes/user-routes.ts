@@ -5,6 +5,7 @@ import { profile } from "@/http/controllers/users/profile";
 import { refresh } from "@/http/controllers/users/refresh";
 import { register } from "@/http/controllers/users/register";
 import { verifyJWT } from "@/http/middlewares/verify-jwt";
+import { getProfileResponseSchema } from "@/schemas/users/get-profile-schema";
 import {
   loginBodySchema,
   loginResponseSchema,
@@ -67,7 +68,19 @@ export async function usersRoutes(app: FastifyInstance) {
     handler: refresh,
   });
 
-  app.get("/me", { onRequest: [verifyJWT] }, profile);
+  app.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
+    method: "GET",
+    url: "/me",
+    schema: {
+      tags: ["users"],
+      summary: "Get the current user's profile",
+      description: "Get the current user's profile",
+
+      response: getProfileResponseSchema,
+    },
+    onRequest: [verifyJWT],
+    handler: profile,
+  });
   app.put("/me", { onRequest: [verifyJWT] }, editProfile);
   app.put("/me/password", { onRequest: [verifyJWT] }, changePassword);
 }
