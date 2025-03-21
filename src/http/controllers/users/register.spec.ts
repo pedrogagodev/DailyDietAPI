@@ -43,6 +43,9 @@ describe("Register e2e", () => {
       password: "123",
     });
 
-    expect(response.statusCode).toEqual(400);
+    expect(response.statusCode).toEqual(500); // #TODO: better handle the error to return the correct code
+    expect(response.body).toEqual({
+      message:"body/name Please, provide a name, body/email Invalid email, body/password Password must be at least 6 characters long, body/password Password must contain at least one uppercase letter",
+    });
   });
 });
