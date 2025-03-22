@@ -24,7 +24,7 @@ The **DailyDietAPI** is a RESTful API designed to assist users in managing their
 - **Technology Stack:**
   - Node.js with Fastify framework
   - TypeScript for type safety
-  - PostgreSQL database (planned migration to PrismaORM)
+  - PostgreSQL database
 - **Architecture:**
   - Clean Architecture principles
   - Separation of concerns
@@ -56,24 +56,30 @@ The **DailyDietAPI** is a RESTful API designed to assist users in managing their
   - [x] Streak: consecutive diet-compliant meals 
   - [x] Best streak: longest sequence of diet-compliant meals 
 ### Data Integrity:
-  - [ ] Referential integrity between users and meals
+  - [X] Referential integrity between users and meals
   - [ ] Consistent date/time format
 
 ## API Endpoints
 - **User Management:**
   - `POST /register`: Create a new user
   - `POST /login`: Authenticate and return a token
+  - `PATCH /token/refresh`: Refresh a user token
+  - `GET /me`: Get user profile
+  - `PUT /me`: Edit user profile
+  - `PUT /me/password`: Changes user password
+
 - **Meal Management:**
-  - `POST /meals`: Create a new meal
-  - `PUT /meals/{mealId}`: Update a meal
-  - `DELETE /meals/{mealId}`: Delete a meal
-  - `GET /meals`: List user's meals
-  - `GET /meals/{mealId}`: Get meal details
+  - `POST /me/meals`: Create a new meal
+  - `GET /me/meals`: List user's meals
+  - `GET /me/meals/{mealId}`: Get meal details
+  - `PUT /me/meals/{mealId}`: Update a meal
+  - `DELETE /me/meals/{mealId}`: Delete a meal
+
 - **User Metrics:**
-  - `GET /metrics/total-meals`: Total meals count
-  - `GET /metrics/within-diet`: Meals within diet count
-  - `GET /metrics/outside-diet`: Meals outside diet count
-  - `GET /metrics/best-streak`: Best diet streak
+  - `GET /me/meals/total`: Total meals count
+  - `GET /me/meals/on-diet`: Meals within diet count
+  - `GET /me/meals/off-diet`: Meals outside diet count
+  - `GET /me/meals/longest-on-diet-sequence`: Best diet streak
 
 ## Installation and Setup
 1. Clone the repository:
@@ -82,7 +88,7 @@ The **DailyDietAPI** is a RESTful API designed to assist users in managing their
    ```
 2. Install dependencies:
    ```
-   cd DailyDietAPI && yarn install
+   cd DailyDietAPI && npm install
    ```
 3. Set up PostgreSQL database
 
@@ -109,7 +115,7 @@ The API uses standard HTTP status codes (e.g., 400, 401, 404, 500) and returns J
 ```json
 
 {
-  "error": "Description of the error"
+  "message": "Description of the error"
 }
 
 ```
@@ -120,6 +126,8 @@ Run tests with:
 
 ```
 npm run test
+&&
+npm run test:e2e
 ```
 
 ## Contribution Guidelines
@@ -139,10 +147,8 @@ npm run test
 Licensed under the MIT License (LICENSE).
 
 ## TODO
-
-- [ ] **Migrate to PrismaORM**: Transition from raw SQL to PrismaORM for simpler queries and better maintainability (removes the no-ORM restriction).
   
-- [ ] **Create E2E Tests**: Implement end-to-end tests to validate the full application flow.
+- [X] **Create E2E Tests**: Implement end-to-end tests to validate the full application flow.
 
 - [ ] **Develop the Frontend Application**:
   - [ ] Build login and registration pages
