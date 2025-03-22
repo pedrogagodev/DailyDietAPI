@@ -21,7 +21,6 @@ export const registerResponseSchema = {
     email: z.string(),
     created_at: z.date(),
     updated_at: z.date(),
-    role: z.enum(["ADMIN", "USER"]),
   }),
   400: z.object({
     message: z.string(),
