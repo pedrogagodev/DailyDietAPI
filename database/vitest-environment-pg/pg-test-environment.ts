@@ -69,31 +69,54 @@ export default {
         );
         console.log(`Cleared migration locks from "${schema}" schema`);
       }
-      await execAsync(
+      console.log("🚨🚨🚨🚨 Executing migrations");
+      const { stdout, stderr } = await execAsync(
         `tsx node_modules/.bin/node-pg-migrate up --migrations-dir database/migrations --schema=${schema} --no-lock`,
         {
           env: { ...process.env, DATABASE_URL: databaseURL },
         }
       );
+      console.log("🚨🚨🚨🚨 Migrations executed: ", stdout);
+      console.log("🚨🚨🚨🚨 Migrations executed error: ", stderr);
     } catch (error) {
       console.error("Error during migrations:", error);
       throw error;
     }
 
+    const tableExists = await client.query(`
+      SELECT 1 
+      FROM information_schema.tables 
+      WHERE table_schema = $1 AND table_name = 'users';
+    `, [schema]);
+    console.log(`Tabela users existe: ${tableExists.rowCount}`);
+
+    if (tableExists.rowCount && tableExists.rowCount > 0) {
+      const columnExists = await client.query(`
+        SELECT 1 
+        FROM information_schema.columns 
+        WHERE table_schema = $1 AND table_name = 'users' AND column_name = 'role';
+      `, [schema]);
+      console.log(`Coluna role existe: ${columnExists.rowCount}`);
+    }
+
     return {
       async teardown() {
         try {
+          console.log("🚨🚨🚨🚨 Reversing migrations");
           await execAsync(
             `tsx node_modules/.bin/node-pg-migrate down --migrations-dir database/migrations --schema=${schema} --no-lock`,
             {
               env: { ...process.env, DATABASE_URL: databaseURL },
             }
           );
+          console.log("🚨🚨🚨🚨 Migrations reversed");
         } catch (error) {
           console.error("Error during migration reversal:", error);
         } finally {
+          console.log("🚨🚨🚨🚨 Dropping schema");
           await client.query(`DROP SCHEMA IF EXISTS "${schema}" CASCADE`);
           await client.end();
+          console.log("🚨🚨🚨🚨 Schema dropped");
         }
       },
     };
