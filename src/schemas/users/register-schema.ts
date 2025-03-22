@@ -17,6 +17,10 @@ export const registerBodySchema = z.object({
 export const registerResponseSchema = {
   201: z.object({
     id: z.string(),
+    name: z.string(),
+    email: z.string(),
+    created_at: z.date(),
+    updated_at: z.date(),
   }),
   400: z.object({
     message: z.string(),

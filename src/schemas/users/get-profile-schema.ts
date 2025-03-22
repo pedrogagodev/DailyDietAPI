@@ -6,7 +6,6 @@ export const getProfileResponseSchema = {
       id: z.string(),
       name: z.string(),
       email: z.string(),
-      role: z.enum(["ADMIN", "USER"]),
       created_at: z.date(),
       updated_at: z.date(),
     }),
