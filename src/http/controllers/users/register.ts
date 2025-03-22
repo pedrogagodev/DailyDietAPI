@@ -8,7 +8,6 @@ type RegisterBody = {
 };
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
-  
   const { name, email, password } = request.body as RegisterBody;
 
   const registerUserCase = makeRegisterUseCase();
@@ -19,5 +18,5 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     password,
   });
 
-  return reply.status(201).send({ id: user.id });
+  return reply.status(201).send({ ...user, password_hash: undefined });
 }
