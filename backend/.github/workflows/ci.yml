@@ -5,6 +5,9 @@ on: [pull_request]
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     services:
       postgres:
         image: postgres:14
@@ -40,6 +43,7 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+          cache-dependency-path: backend/package.json
 
       - name: Install backend dependencies
         run: |
@@ -55,6 +59,9 @@ jobs:
 
   e2e-tests:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     services:
       postgres:
         image: postgres:14
@@ -90,6 +97,8 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+          cache-dependency-path: backend/package.json
+          
       - name: Install backend dependencies
         run: |
           npm install
