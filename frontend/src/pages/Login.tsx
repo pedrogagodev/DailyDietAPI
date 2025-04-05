@@ -15,8 +15,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authService } from "@/services/authService";
+import type { LoginParams } from "@/types/login";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -33,9 +37,20 @@ export default function Login() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof loginSchema>) => {
-    console.log("Form Data:", data);
-  };
+  const mutation = useMutation({
+    mutationFn: async (data: LoginParams) => {
+      return authService.login(data);
+    },
+  });
+
+  const handleSubmit = form.handleSubmit(async data => {
+    try {
+      const { token } = await mutation.mutateAsync(data);
+      console.log(token);
+    } catch (error) {
+      toast.error("Failed to login");
+    }
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100">
@@ -46,7 +61,7 @@ export default function Login() {
 
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <FormField
                 control={form.control}
                 name="email"
@@ -85,7 +100,11 @@ export default function Login() {
                 )}
               />
 
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full"
+                isLoading={mutation.isPending}
+              >
                 Sign in
               </Button>
             </form>
