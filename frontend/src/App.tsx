@@ -1,5 +1,10 @@
-function App() {
-  return <div>Hello, world!</div>;
-}
+import { BrowserRouter } from "react-router";
+import { Router } from "./Router";
 
-export default App;
+export function App() {
+  return (
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
+  );
+}
