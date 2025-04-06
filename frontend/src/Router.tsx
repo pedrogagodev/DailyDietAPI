@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { CreateMeal } from "./pages/CreateMeal";
 
 export function Router() {
   return (
@@ -12,7 +13,9 @@ export function Router() {
       <Route element={<DefaultLayout />}>
         <Route path="/" element={<Home />} />
         <Route element={<AuthGuard isPrivate={true} />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route path="meals/create" element={<CreateMeal />} />
+          </Route>
         </Route>
       </Route>
       <Route element={<AuthGuard isPrivate={false} />}>
