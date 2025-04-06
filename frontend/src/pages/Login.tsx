@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -15,12 +14,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/useAuth";
 import { authService } from "@/services/authService";
 import type { LoginParams } from "@/types/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -43,10 +44,15 @@ export default function Login() {
     },
   });
 
+  const { signin } = useAuth();
+  const navigate = useNavigate();
+
   const handleSubmit = form.handleSubmit(async data => {
     try {
       const { token } = await mutation.mutateAsync(data);
-      console.log(token);
+      signin(token);
+      toast.success("Successfully logged in");
+      navigate("/dashboard");
     } catch (error) {
       toast.error("Failed to login");
     }
