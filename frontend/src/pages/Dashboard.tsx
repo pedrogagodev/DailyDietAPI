@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Circle } from "lucide-react";
+import { Outlet, useNavigate } from "react-router";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   return (
     <div className="w-full min-h-screen px-4 bg-slate-200">
       <div className="flex flex-col items-center justify-between">
@@ -46,7 +48,12 @@ export default function Dashboard() {
       <div className="w-full my-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold">Meals</h2>{" "}
-          <Button className="font-bold">New meal</Button>
+          <Button
+            className="font-bold hover:cursor-pointer"
+            onClick={() => navigate("/dashboard/meals/create")}
+          >
+            New meal
+          </Button>
         </div>
         <div className="flex flex-col gap-2 mt-4">
           <p className="text-sm text-gray-500">12.03.2025</p>
@@ -61,7 +68,7 @@ export default function Dashboard() {
                   </p>
                 </div>
               </div>
-              <Circle className="text-green-500" size={20} fill="#00c951"/>
+              <Circle className="text-green-500" size={20} fill="#00c951" />
             </CardContent>
           </Card>
           <Card>
@@ -75,7 +82,7 @@ export default function Dashboard() {
                   </p>
                 </div>
               </div>
-              <Circle className="text-green-500" size={20} fill="#00c951"/>
+              <Circle className="text-green-500" size={20} fill="#00c951" />
             </CardContent>
           </Card>
           <Card>
@@ -89,11 +96,12 @@ export default function Dashboard() {
                   </p>
                 </div>
               </div>
-              <Circle className="text-green-500" size={20} fill="#00c951"/>
+              <Circle className="text-green-500" size={20} fill="#00c951" />
             </CardContent>
           </Card>
         </div>
       </div>
+      <Outlet />
     </div>
   );
 }
