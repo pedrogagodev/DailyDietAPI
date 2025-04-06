@@ -21,6 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 import { z } from "zod";
 
 const registerSchema = z.object({
@@ -45,9 +46,13 @@ export default function Register() {
     },
   });
 
+  const navigate = useNavigate();
+
   const handleSubmit = form.handleSubmit(async data => {
     try {
       await mutation.mutateAsync(data);
+      toast.success("Successfully registered");
+      navigate("/login");
     } catch (error) {
       toast.error("Failed to register");
     }
