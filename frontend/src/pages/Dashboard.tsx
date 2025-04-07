@@ -15,16 +15,30 @@ export default function Dashboard() {
     queryFn: () => mealsService.listMeals(),
     enabled: isSignedIn,
   });
+  const { data: sequence } = useQuery({
+    queryKey: ["me", "getSequence"],
+    queryFn: () => mealsService.getSequence(),
+    enabled: isSignedIn,
+  });
+
+  const mealsWithinDietPercentage =
+    data?.meals &&
+    (
+      (data?.meals.filter(meal => meal.isOnDiet).length / data?.meals.length) *
+      100
+    ).toFixed(1);
 
   return (
     <div className="w-full min-h-screen px-4 bg-slate-200">
       <div className="flex flex-col items-center justify-between">
-        <Card className="w-full bg-green-100 my-4 gap-2">
+        <Card
+          className={`w-full ${mealsWithinDietPercentage && Number(mealsWithinDietPercentage) >= 50 ? "bg-green-200" : "bg-red-400"} my-4 gap-2`}
+        >
           <CardHeader className="text-center text-sm">
             <CardTitle>Meals within diet</CardTitle>
           </CardHeader>
           <CardContent className="text-center text-3xl font-bold">
-            90,7%
+            {mealsWithinDietPercentage ?? 0}%
           </CardContent>
         </Card>
         <div className="w-full">
@@ -32,25 +46,25 @@ export default function Dashboard() {
             <Card className="gap-2">
               <CardTitle className="ml-4 text-sm">Meals registered</CardTitle>
               <CardContent className="text-2xl font-bold p-0 ml-4">
-                20
+                {data?.meals.length}
               </CardContent>
             </Card>
             <Card className="gap-2 border-green-500">
               <CardTitle className="ml-4 text-sm">Within diet</CardTitle>
               <CardContent className="text-2xl font-bold p-0 ml-4">
-                18
+                {data?.meals.filter(meal => meal.isOnDiet).length}
               </CardContent>
             </Card>
             <Card className="gap-2 border-red-500">
               <CardTitle className="ml-4 text-sm">Without diet</CardTitle>
               <CardContent className="text-2xl font-bold p-0 ml-4">
-                2
+                {data?.meals.filter(meal => !meal.isOnDiet).length}
               </CardContent>
             </Card>
             <Card className="gap-2">
               <CardTitle className="ml-4 text-sm">Best sequence</CardTitle>
               <CardContent className="text-2xl font-bold p-0 ml-4">
-                7 days
+                {sequence?.longestOnDietSequence ?? 0}
               </CardContent>
             </Card>
           </div>
