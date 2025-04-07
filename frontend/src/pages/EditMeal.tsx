@@ -53,6 +53,9 @@ export function EditMeal() {
       queryClient.invalidateQueries({
         queryKey: ["me", "listMeals"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "getSequence"],
+      });
     },
   });
 

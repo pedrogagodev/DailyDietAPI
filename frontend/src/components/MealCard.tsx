@@ -45,6 +45,9 @@ export function MealCard({
       queryClient.invalidateQueries({
         queryKey: ["me", "listMeals"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "getSequence"],
+      });
       toast.success("Successfully deleted");
       setIsDialogOpen(false);
     },
