@@ -2,6 +2,7 @@ export interface CreateMealParams {
   name: string;
   description?: string;
   isOnDiet: boolean;
+  mealTime: string;
 }
 
 export interface CreateMealResponse {
