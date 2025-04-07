@@ -23,6 +23,7 @@ import { z } from "zod";
 const createMealSchema = z.object({
   name: z.string().min(1, { message: "Please, provide a meal name" }),
   description: z.string().nullable(),
+  mealTime: z.string(),
   isOnDiet: z.boolean({
     message: "Please, provide a valid value for isOnDiet",
   }),
@@ -55,6 +56,7 @@ export function CreateMeal() {
         name: data.name,
         description: data.description ?? undefined,
         isOnDiet: data.isOnDiet,
+        mealTime: data.mealTime,
       });
       toast.success("Successfully created");
       navigate("/dashboard");
@@ -108,6 +110,21 @@ export function CreateMeal() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="mealTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date</FormLabel>
+                    <FormControl>
+                      <Input type="time" {...field} value={field.value ?? ""} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="isOnDiet"
