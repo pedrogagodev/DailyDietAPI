@@ -16,6 +16,7 @@ export default function Dashboard() {
     queryFn: () => mealsService.listMeals(),
     enabled: isSignedIn,
   });
+
   const { data: sequence } = useQuery({
     queryKey: ["me", "getSequence"],
     queryFn: () => mealsService.getSequence(),
@@ -89,7 +90,7 @@ export default function Dashboard() {
           {data?.meals.map(meal => (
             <MealCard
               key={meal.id}
-              dateTime={meal.date_time}
+              mealTime={meal.mealTime}
               name={meal.name}
               description={meal.description ?? ""}
               isOnDiet={meal.isOnDiet}
