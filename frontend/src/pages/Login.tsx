@@ -59,7 +59,7 @@ export default function Login() {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+    <div className="min-h-screen flex items-center justify-center">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Sign in</CardTitle>
@@ -73,7 +73,7 @@ export default function Login() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-lg font-bold">Email</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="email@example.com"
@@ -92,7 +92,7 @@ export default function Login() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="text-lg font-bold">Password</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -108,7 +108,7 @@ export default function Login() {
 
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full font-bold text-lg"
                 isLoading={mutation.isPending}
               >
                 Sign in
