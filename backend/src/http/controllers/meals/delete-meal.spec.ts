@@ -28,6 +28,7 @@ describe("Delete Meal e2e", () => {
         userId: userId,
         description: "Pizza with cheese and pepperoni",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     expect(createMealResponse.statusCode).toEqual(201);
@@ -84,6 +85,7 @@ describe("Delete Meal e2e", () => {
         name: "Pizza",
         description: "Pizza with cheese and pepperoni",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     expect(createMealResponse.statusCode).toEqual(201);
