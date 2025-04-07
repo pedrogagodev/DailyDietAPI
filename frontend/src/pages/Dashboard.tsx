@@ -38,7 +38,10 @@ export default function Dashboard() {
 
   const mealsByDate: MealByDate[] = datesArray.map(date => ({
     date,
-    meals: data?.meals.filter(meal => meal.createdAt.slice(0, 10).replace(/-/g, ".") === date) ?? [],
+    meals:
+      data?.meals.filter(
+        meal => meal.createdAt.slice(0, 10).replace(/-/g, ".") === date
+      ) ?? [],
   }));
 
   const mealsWithinDietPercentage =
@@ -49,10 +52,10 @@ export default function Dashboard() {
     ).toFixed(1);
 
   return (
-    <div className="w-full min-h-screen px-4 bg-slate-200">
+    <div className="w-full min-h-screen px-4 bg-gray-200 dark:bg-background">
       <div className="flex flex-col items-center justify-between">
         <Card
-          className={`w-full ${mealsWithinDietPercentage && Number(mealsWithinDietPercentage) >= 50 ? "bg-green-200" : "bg-red-400"} my-4 gap-2`}
+          className={`w-full ${mealsWithinDietPercentage && Number(mealsWithinDietPercentage) >= 50 ? "bg-primary/80" : "bg-destructive/90"} my-4 gap-2`}
         >
           <CardHeader className="text-center text-sm">
             <CardTitle>Meals within diet</CardTitle>
@@ -72,13 +75,13 @@ export default function Dashboard() {
                 {data?.meals.length}
               </CardContent>
             </Card>
-            <Card className="gap-2 border-green-500">
+            <Card className="gap-2 border-primary border-2">
               <CardTitle className="ml-4 text-sm">Within diet</CardTitle>
               <CardContent className="text-2xl font-bold p-0 ml-4">
                 {data?.meals.filter(meal => meal.isOnDiet).length}
               </CardContent>
             </Card>
-            <Card className="gap-2 border-red-500">
+            <Card className="gap-2 border-destructive border-2">
               <CardTitle className="ml-4 text-sm">Without diet</CardTitle>
               <CardContent className="text-2xl font-bold p-0 ml-4">
                 {data?.meals.filter(meal => !meal.isOnDiet).length}
@@ -95,7 +98,7 @@ export default function Dashboard() {
       </div>
       <div className="w-full my-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold">Meals</h2>{" "}
+          <h2 className="text-3xl font-bold">Meals</h2>{" "}
           <Button
             className="font-bold hover:cursor-pointer"
             onClick={() => navigate("/dashboard/meals/create")}
@@ -104,13 +107,10 @@ export default function Dashboard() {
           </Button>
         </div>
         <div className="flex flex-col gap-2 mt-4">
-          <p className="text-sm text-gray-500">
-            {data?.meals.length} meals registered
-          </p>
           {data?.meals.length === 0 ? <EmptyMeals /> : null}
           {mealsByDate.map(meals => (
             <div key={meals?.date} className="flex flex-col gap-2 mt-4">
-              <h3 className="text-sm text-gray-500">{meals?.date}</h3>
+              <h3 className=" font-bold">{meals?.date}</h3>
               {meals?.meals?.map(meal => (
                 <MealCard
                   key={meal.id}
