@@ -59,11 +59,11 @@ export default function Register() {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+    <div className="min-h-screen flex items-center justify-center">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Create Account</CardTitle>
-          <CardDescription>Start your journey with us today</CardDescription>
+          <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
+          <CardDescription className="text-lg">Start your journey with us today</CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -74,7 +74,7 @@ export default function Register() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Full Name</FormLabel>
+                    <FormLabel className="text-lg font-bold">Full Name</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="John Doe"
@@ -92,7 +92,7 @@ export default function Register() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-lg font-bold">Email</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="email@example.com"
@@ -111,7 +111,7 @@ export default function Register() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="text-lg font-bold">Password</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -127,7 +127,7 @@ export default function Register() {
 
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full font-bold text-lg"
                 isLoading={mutation.isPending}
               >
                 Create Account
