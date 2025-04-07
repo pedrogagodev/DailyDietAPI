@@ -43,6 +43,7 @@ export function EditMeal() {
       description:
         data?.meals.find(meal => meal.id === mealId)?.description ?? "",
       isOnDiet: data?.meals.find(meal => meal.id === mealId)?.isOnDiet ?? false,
+      mealTime: data?.meals.find(meal => meal.id === mealId)?.mealTime ?? "",
     },
   });
 
