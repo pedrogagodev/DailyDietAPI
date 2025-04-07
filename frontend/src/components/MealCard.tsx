@@ -59,18 +59,22 @@ export function MealCard({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Card className="hover:bg-gray-100 hover:cursor-pointer">
+        <Card className="hover:bg-primary/5 hover:cursor-pointer">
           <CardContent className="flex items-center justify-between">
             <div className="flex gap-4 items-center">
-              <p className="text-sm text-gray-500">{mealTime.slice(0, 5)}</p>
-              <div className="flex flex-col gap-2">
-                <h3 className="font-bold">{name}</h3>
-                <p className="text-sm text-gray-500">{description}</p>
+              <p className="text-gray-500 dark:text-primary font-bold">
+                {mealTime.slice(0, 5)}
+              </p>
+              <div className="flex flex-col gap-2 ml-4">
+                <h3 className="text-lg font-bold">{name}</h3>
+                <p className="text-sm text-gray-500 dark:text-primary ">
+                  {description}
+                </p>
               </div>
             </div>
             <Circle
               size={24}
-              fill={isOnDiet ? "#00c951" : "#e7000b"}
+              fill={isOnDiet ? "#4caf50" : "#c62828"}
               className="text-white"
             />
           </CardContent>
@@ -78,33 +82,33 @@ export function MealCard({
       </DialogTrigger>
       <DialogContent className="flex flex-col gap-2 items-start">
         <DialogHeader className="flex flex-col gap-2 items-start">
-          <DialogTitle>{name}</DialogTitle>
-          <DialogDescription className="flex flex-col gap-2 items-start">
-            <span>{description}</span>
-            <span>Date time: {mealTime.slice(0, 5)}</span>
-            <span>Is on diet? {isOnDiet ? "Yes" : "No"}</span>
+          <DialogTitle className="text-xl font-bold mb-4 md:text-2xl">{name}</DialogTitle>
+          <DialogDescription className="flex flex-col gap-4 items-start">
+            <span className="md:text-lg">{description}</span>
+            <span className="md:text-lg"><span className="font-bold">Date time:</span> {mealTime.slice(0, 5)}</span>
+            <span className="md:text-lg"><span className="font-bold">Is on diet:</span> {isOnDiet ? "Yes" : "No"}</span>
           </DialogDescription>
         </DialogHeader>
         <div className="flex gap-4 mt-4">
           <DialogClose>
-            <Button onClick={handleClickEdit}>Edit</Button>
+            <Button onClick={handleClickEdit} className="font-bold md:px-8">Edit</Button>
           </DialogClose>
           <Dialog>
             <DialogTrigger>
-              <Button variant="destructive">Delete</Button>
+              <Button variant="destructive" className="font-bold md:px-6">Delete</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Delete Meal</DialogTitle>
-                <DialogDescription>
+                <DialogTitle className="text-xl font-bold mb-4 md:text-2xl">Delete Meal</DialogTitle>
+                <DialogDescription className="md:text-lg">
                   Are you sure you want to delete this meal?
                 </DialogDescription>
               </DialogHeader>
               <DialogClose className="flex justify-end gap-2 mt-6">
-                <Button variant="destructive" onClick={handleClickDelete}>
+                <Button variant="destructive" onClick={handleClickDelete} className="font-bold md:px-8">
                   Delete
                 </Button>
-                <Button>Cancel</Button>
+                <Button className="font-bold md:px-8">Cancel</Button>
               </DialogClose>
             </DialogContent>
           </Dialog>
