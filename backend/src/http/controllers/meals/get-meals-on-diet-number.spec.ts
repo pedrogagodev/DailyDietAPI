@@ -27,6 +27,7 @@ describe("Get Total Meals On Diet Number e2e", () => {
         name: "Pizza",
         description: "Pizza with cheese and pepperoni",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     expect(createMealResponse.statusCode).toEqual(201);
@@ -61,6 +62,7 @@ describe("Get Total Meals On Diet Number e2e", () => {
         name: "First user meal",
         description: "This meal belongs to the first user",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
       await request(app.server)
@@ -70,6 +72,7 @@ describe("Get Total Meals On Diet Number e2e", () => {
         name: "Second meal of first user",
         description: "This meal belongs to the first user",
         isOnDiet: false,
+        mealTime: "10:00",
       });
 
     const secondUser = await createAndAuthenticateUser(app, false);
@@ -81,6 +84,7 @@ describe("Get Total Meals On Diet Number e2e", () => {
         name: "Second user meal",
         description: "This meal belongs to the second user",
         isOnDiet: false,
+        mealTime: "10:00",
       });
 
     const getMealsOnDietNumberResponseOfFirstUser = await request(app.server)
