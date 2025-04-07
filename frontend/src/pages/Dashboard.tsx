@@ -31,7 +31,9 @@ export default function Dashboard() {
 
   const dates: Set<string> = new Set();
   for (const meal of data?.meals ?? []) {
-    dates.add(meal.createdAt.slice(0, 10).replace(/-/g, "."));
+    const [year, month, day] = meal.createdAt.slice(0, 10).split("-");
+    const formattedDate = `${month}/${day}/${year.slice(-2)}`;
+    dates.add(formattedDate);
   }
 
   const datesArray = Array.from(dates);
@@ -39,11 +41,11 @@ export default function Dashboard() {
   const mealsByDate: MealByDate[] = datesArray.map(date => ({
     date,
     meals:
-      data?.meals.filter(
-        meal => meal.createdAt.slice(0, 10).replace(/-/g, ".") === date
-      ) ?? [],
+      data?.meals.filter(meal => {
+        const [year, month, day] = meal.createdAt.slice(0, 10).split("-");
+        return `${month}/${day}/${year.slice(-2)}` === date;
+      }) ?? [],
   }));
-
   const mealsWithinDietPercentage =
     data?.meals &&
     (
