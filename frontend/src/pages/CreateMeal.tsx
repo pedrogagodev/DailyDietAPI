@@ -10,8 +10,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { createMeal } from "@/services/mealsService/createMeal";
+import { queryClient } from "@/services/query-client";
+import type { CreateMealParams } from "@/types/createMeal";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { z } from "zod";
 
@@ -33,8 +38,29 @@ export function CreateMeal() {
     },
   });
 
-  const handleSubmit = form.handleSubmit(values => {
-    console.log(values);
+  const mutation = useMutation({
+    mutationFn: async (data: CreateMealParams) => {
+      return createMeal(data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["me", "listMeals"],
+      });
+    },
+  });
+
+  const handleSubmit = form.handleSubmit(async data => {
+    try {
+      await mutation.mutateAsync({
+        name: data.name,
+        description: data.description ?? undefined,
+        isOnDiet: data.isOnDiet,
+      });
+      toast.success("Successfully created");
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error("Failed to create");
+    }
   });
 
   return (
@@ -122,7 +148,11 @@ export function CreateMeal() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="font-bold">
+                <Button
+                  type="submit"
+                  className="font-bold"
+                  isLoading={mutation.isPending}
+                >
                   Create
                 </Button>
               </div>
