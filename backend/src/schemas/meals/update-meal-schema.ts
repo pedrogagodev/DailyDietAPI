@@ -17,7 +17,7 @@ export const updateMealResponseSchema = {
       name: z.string(),
       description: z.string().nullable(),
       isOnDiet: z.boolean(),
-      dateTime: z.date(),
+      mealTime: z.string(),
       createdAt: z.date(),
       updatedAt: z.date(),
     }),
