@@ -1,10 +1,21 @@
+import { MealCard } from "@/components/MealCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Circle } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { mealsService } from "@/services/mealsService";
+import { useQuery } from "@tanstack/react-query";
 import { Outlet, useNavigate } from "react-router";
 
 export default function Dashboard() {
+  const { isSignedIn } = useAuth();
+
   const navigate = useNavigate();
+  const { data } = useQuery({
+    queryKey: ["me", "listMeals"],
+    queryFn: () => mealsService.listMeals(),
+    enabled: isSignedIn,
+  });
+
   return (
     <div className="w-full min-h-screen px-4 bg-slate-200">
       <div className="flex flex-col items-center justify-between">
@@ -57,48 +68,15 @@ export default function Dashboard() {
         </div>
         <div className="flex flex-col gap-2 mt-4">
           <p className="text-sm text-gray-500">12.03.2025</p>
-          <Card>
-            <CardContent className="flex items-center justify-between">
-              <div className="flex gap-4 items-center">
-                <p className="text-sm text-gray-500">8:00</p>
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-bold">Breakfast</h3>
-                  <p className="text-sm text-gray-500">
-                    Eggs, toast, and coffee
-                  </p>
-                </div>
-              </div>
-              <Circle className="text-green-500" size={20} fill="#00c951" />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center justify-between">
-              <div className="flex gap-4 items-center">
-                <p className="text-sm text-gray-500">8:00</p>
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-bold">Breakfast</h3>
-                  <p className="text-sm text-gray-500">
-                    Eggs, toast, and coffee
-                  </p>
-                </div>
-              </div>
-              <Circle className="text-green-500" size={20} fill="#00c951" />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center justify-between">
-              <div className="flex gap-4 items-center">
-                <p className="text-sm text-gray-500">8:00</p>
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-bold">Breakfast</h3>
-                  <p className="text-sm text-gray-500">
-                    Eggs, toast, and coffee
-                  </p>
-                </div>
-              </div>
-              <Circle className="text-green-500" size={20} fill="#00c951" />
-            </CardContent>
-          </Card>
+          {data?.meals.map(meal => (
+            <MealCard
+              key={meal.id}
+              dateTime={meal.date_time}
+              name={meal.name}
+              description={meal.description ?? ""}
+              isOnDiet={meal.isOnDiet}
+            />
+          ))}
         </div>
       </div>
       <Outlet />
