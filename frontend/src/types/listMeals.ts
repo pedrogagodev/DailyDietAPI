@@ -6,7 +6,7 @@ export interface GetMealsResponse {
     description: string | null;
     isOnDiet: boolean;
     mealTime: string;
-    created_at: string;
-    updated_at: string;
+    createdAt: string;
+    updatedAt: string;
   }[];
 }
