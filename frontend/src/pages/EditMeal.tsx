@@ -26,6 +26,7 @@ const editMealSchema = z.object({
   isOnDiet: z.boolean({
     message: "Please, provide a valid value for isOnDiet",
   }),
+  mealTime: z.string(),
 });
 
 export function EditMeal() {
@@ -66,6 +67,7 @@ export function EditMeal() {
         description: data.description ?? undefined,
         isOnDiet: data.isOnDiet,
         id: mealId ?? "",
+        mealTime: data.mealTime,
       });
       toast.success("Successfully edited");
       navigate("/dashboard");
@@ -81,9 +83,9 @@ export function EditMeal() {
         className="absolute inset-0 bg-black opacity-50"
         onClick={() => navigate("/dashboard")}
       />
-      <Card className="relative w-full mx-10 bg-white p-6 rounded-md shadow-lg z-30">
+      <Card className="relative w-full mx-10 p-6 rounded-md shadow-lg z-30">
         <CardHeader>
-          <CardTitle>Edit Meal</CardTitle>
+          <CardTitle className="text-xl font-bold">Edit Meal</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -93,7 +95,7 @@ export function EditMeal() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel className="text-lg font-bold">Name</FormLabel>
                     <FormControl>
                       <Input placeholder="Breakfast" type="name" {...field} />
                     </FormControl>
@@ -107,7 +109,7 @@ export function EditMeal() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel className="text-lg font-bold">Description</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="A simple breakfast with toast, eggs, and coffee"
@@ -119,18 +121,34 @@ export function EditMeal() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="mealTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-lg font-bold">Date</FormLabel>
+                    <FormControl>
+                      <Input type="time" {...field} value={field.value ?? ""} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="isOnDiet"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Is on diet?</FormLabel>
+                    <FormLabel className="text-lg font-bold">Is on diet?</FormLabel>
                     <FormControl>
                       <div className="flex space-x-2">
                         <Button
                           type="button"
                           variant={field.value === true ? "default" : "outline"}
                           onClick={() => field.onChange(true)}
+                          className="font-bold px-6"
                         >
                           Yes
                         </Button>
@@ -140,6 +158,7 @@ export function EditMeal() {
                             field.value === false ? "default" : "outline"
                           }
                           onClick={() => field.onChange(false)}
+                          className="font-bold px-7"
                         >
                           No
                         </Button>
@@ -149,7 +168,7 @@ export function EditMeal() {
                   </FormItem>
                 )}
               />
-              <div className="flex justify-end space-x-2">
+              <div className="flex justify-end space-x-4 mt-10">
                 <Button
                   type="button"
                   variant="outline"
@@ -161,7 +180,7 @@ export function EditMeal() {
                 </Button>
                 <Button
                   type="submit"
-                  className="font-bold"
+                  className="font-bold px-7"
                   isLoading={mutation.isPending}
                 >
                   Edit
