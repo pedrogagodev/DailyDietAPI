@@ -4,8 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { mealsService } from "@/services/mealsService";
+import type { GetMealsResponse } from "@/types/listMeals";
 import { useQuery } from "@tanstack/react-query";
 import { Outlet, useNavigate } from "react-router";
+
+interface MealByDate {
+  date: string;
+  meals: GetMealsResponse["meals"];
+}
 
 export default function Dashboard() {
   const { isSignedIn } = useAuth();
@@ -22,6 +28,18 @@ export default function Dashboard() {
     queryFn: () => mealsService.getSequence(),
     enabled: isSignedIn,
   });
+
+  const dates: Set<string> = new Set();
+  for (const meal of data?.meals ?? []) {
+    dates.add(meal.createdAt.slice(0, 10).replace(/-/g, "."));
+  }
+
+  const datesArray = Array.from(dates);
+
+  const mealsByDate: MealByDate[] = datesArray.map(date => ({
+    date,
+    meals: data?.meals.filter(meal => meal.createdAt.slice(0, 10).replace(/-/g, ".") === date) ?? [],
+  }));
 
   const mealsWithinDietPercentage =
     data?.meals &&
@@ -86,16 +104,24 @@ export default function Dashboard() {
           </Button>
         </div>
         <div className="flex flex-col gap-2 mt-4">
+          <p className="text-sm text-gray-500">
+            {data?.meals.length} meals registered
+          </p>
           {data?.meals.length === 0 ? <EmptyMeals /> : null}
-          {data?.meals.map(meal => (
-            <MealCard
-              key={meal.id}
-              mealTime={meal.mealTime}
-              name={meal.name}
-              description={meal.description ?? ""}
-              isOnDiet={meal.isOnDiet}
-              id={meal.id}
-            />
+          {mealsByDate.map(meals => (
+            <div key={meals?.date} className="flex flex-col gap-2 mt-4">
+              <h3 className="text-sm text-gray-500">{meals?.date}</h3>
+              {meals?.meals?.map(meal => (
+                <MealCard
+                  key={meal.id}
+                  mealTime={meal.mealTime}
+                  name={meal.name}
+                  description={meal.description ?? ""}
+                  isOnDiet={meal.isOnDiet}
+                  id={meal.id}
+                />
+              ))}
+            </div>
           ))}
         </div>
       </div>
