@@ -1,9 +1,11 @@
 import { createMeal } from "./createMeal";
 import { editMeal } from "./editMeal";
+import { getSequence } from "./getSequence";
 import { listMeals } from "./listMeals";
 
 export const mealsService = {
   createMeal,
   listMeals,
-  editMeal
+  editMeal,
+  getSequence,
 };
