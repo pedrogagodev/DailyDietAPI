@@ -27,6 +27,7 @@ describe("Update Meal e2e", () => {
         name: "Pizza",
         description: "Pizza with cheese and pepperoni",
         isOnDiet: true,
+        mealTime: "10:00",
       });
     expect(createMealResponse.statusCode).toEqual(201);
 
@@ -40,6 +41,7 @@ describe("Update Meal e2e", () => {
         name: "Lunch",
         description: "Rice and chicken",
         isOnDiet: false,
+        mealTime: "10:00",
       });
 
     expect(updateMealResponse.statusCode).toEqual(200);
@@ -66,6 +68,7 @@ describe("Update Meal e2e", () => {
         name: "Pizza",
         description: "Pizza with cheese and pepperoni",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     expect(createMealResponse.statusCode).toEqual(201);
@@ -85,6 +88,7 @@ describe("Update Meal e2e", () => {
         name: "Pizza with cheese and pepperoni",
         description: "Pizza with cheese and pepperoni",
         isOnDiet: false,
+        mealTime: "10:00",
       });
 
     expect(updateMealResponse.statusCode).toEqual(403);
