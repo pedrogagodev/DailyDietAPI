@@ -38,7 +38,10 @@ export default function Dashboard() {
             <CardTitle>Meals within diet</CardTitle>
           </CardHeader>
           <CardContent className="text-center text-3xl font-bold">
-            {mealsWithinDietPercentage ?? 0}%
+            {mealsWithinDietPercentage !== "NaN"
+              ? mealsWithinDietPercentage
+              : 0}
+            %
           </CardContent>
         </Card>
         <div className="w-full">
