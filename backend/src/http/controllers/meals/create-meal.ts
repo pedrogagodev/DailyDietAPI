@@ -5,10 +5,11 @@ type CreateMealBody = {
   name: string;
   description: string | null;
   isOnDiet: boolean;
+  mealTime: string;
 };
 
 export async function createMeal(request: FastifyRequest, reply: FastifyReply) {
-  const { name, description, isOnDiet } = request.body as CreateMealBody;
+  const { name, description, isOnDiet, mealTime } = request.body as CreateMealBody;
   const userId = request.user.sub;
 
   const createMealUseCase = makeCreateMealUseCase();
@@ -16,6 +17,7 @@ export async function createMeal(request: FastifyRequest, reply: FastifyReply) {
   const { meal } = await createMealUseCase.execute({
     userId,
     name,
+    mealTime,
     description,
     isOnDiet,
     requestingUserId: userId,
@@ -24,6 +26,7 @@ export async function createMeal(request: FastifyRequest, reply: FastifyReply) {
   return reply.status(201).send({
     meal: {
       ...meal,
+      mealTime: meal.mealTime,
       userId: undefined,
     },
   });
