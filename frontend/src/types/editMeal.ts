@@ -3,6 +3,7 @@ export interface EditMealParams {
   description?: string;
   isOnDiet?: boolean;
   id: string;
+  mealTime?: string;
 }
 export interface EditMealResponse {
   meal: {
