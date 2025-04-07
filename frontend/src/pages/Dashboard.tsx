@@ -75,6 +75,7 @@ export default function Dashboard() {
               name={meal.name}
               description={meal.description ?? ""}
               isOnDiet={meal.isOnDiet}
+              id={meal.id}
             />
           ))}
         </div>
