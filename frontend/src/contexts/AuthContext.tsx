@@ -1,5 +1,5 @@
 import { usersService } from "@/services/usersService";
-import type { meResponse } from "@/services/usersService/me";
+import type { meResponse } from "@/types/me";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useCallback, useEffect, useState } from "react";
 
