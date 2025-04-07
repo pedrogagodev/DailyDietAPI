@@ -1,3 +1,4 @@
+import { EmptyMeals } from "@/components/EmptyMeals";
 import { MealCard } from "@/components/MealCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -84,7 +85,7 @@ export default function Dashboard() {
           </Button>
         </div>
         <div className="flex flex-col gap-2 mt-4">
-          <p className="text-sm text-gray-500">12.03.2025</p>
+          {data?.meals.length === 0 ? <EmptyMeals /> : null}
           {data?.meals.map(meal => (
             <MealCard
               key={meal.id}
