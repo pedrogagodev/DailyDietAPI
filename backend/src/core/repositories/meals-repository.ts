@@ -2,6 +2,7 @@ import type { Meal } from "../entities/meal";
 
 export interface CreateMealData {
   userId: string;
+  mealTime: string;
   requestingUserId: string;
   name: string;
   description?: string | null;
@@ -11,6 +12,7 @@ export interface CreateMealData {
 export interface UpdateMealData {
   name?: string;
   description?: string | null;
+  mealTime?: string;
   isOnDiet?: boolean;
 }
 
