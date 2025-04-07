@@ -29,6 +29,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
         name: "Bread with eggs",
         description: "A simple breakfast",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     await request(app.server)
@@ -38,6 +39,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
         name: "Bread with eggs",
         description: "A simple breakfast",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     await request(app.server)
@@ -47,6 +49,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
         name: "Bread with eggs",
         description: "A simple breakfast",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     expect(createMealResponse.statusCode).toEqual(201);
@@ -82,6 +85,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
         name: "First user meal",
         description: "This meal belongs to the first user",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
       await request(app.server)
@@ -91,6 +95,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
         name: "Second meal of first user",
         description: "This meal belongs to the first user",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     await request(app.server)
@@ -100,6 +105,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
         name: "Third meal of first user",
         description: "This meal belongs to the first user",
         isOnDiet: false,
+        mealTime: "10:00",
       });
 
     await request(app.server)
@@ -109,6 +115,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
         name: "Fourth meal of first user",
         description: "This meal belongs to the first user",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     const secondUser = await createAndAuthenticateUser(app, false);
@@ -120,6 +127,7 @@ describe("Get Longest On Diet Sequence e2e", () => {
         name: "Second user meal",
         description: "This meal belongs to the second user",
         isOnDiet: false,
+        mealTime: "10:00",
       });
 
     const getLongestOnDietSequenceResponseOfFirstUser = await request(app.server)
