@@ -72,9 +72,9 @@ export function CreateMeal() {
         className="absolute inset-0 bg-black opacity-50"
         onClick={() => navigate("/dashboard")}
       />
-      <Card className="relative w-full mx-10 bg-white p-6 rounded-md shadow-lg z-30">
+      <Card className="relative w-full mx-10 p-6 rounded-md shadow-lg z-30">
         <CardHeader>
-          <CardTitle>Create new Meal</CardTitle>
+          <CardTitle className="text-xl font-bold">Create new Meal</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -84,7 +84,7 @@ export function CreateMeal() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel className="text-lg font-bold">Name</FormLabel>
                     <FormControl>
                       <Input placeholder="Breakfast" type="name" {...field} />
                     </FormControl>
@@ -98,7 +98,7 @@ export function CreateMeal() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel className="text-lg font-bold">Description</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="A simple breakfast with toast, eggs, and coffee"
@@ -116,7 +116,7 @@ export function CreateMeal() {
                 name="mealTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date</FormLabel>
+                    <FormLabel className="text-lg font-bold">Date</FormLabel>
                     <FormControl>
                       <Input type="time" {...field} value={field.value ?? ""} />
                     </FormControl>
@@ -130,13 +130,14 @@ export function CreateMeal() {
                 name="isOnDiet"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Is on diet?</FormLabel>
+                    <FormLabel className="text-lg font-bold">Is on diet?</FormLabel>
                     <FormControl>
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-4">
                         <Button
                           type="button"
                           variant={field.value === true ? "default" : "outline"}
                           onClick={() => field.onChange(true)}
+                          className="font-bold px-6"
                         >
                           Yes
                         </Button>
@@ -146,6 +147,7 @@ export function CreateMeal() {
                             field.value === false ? "default" : "outline"
                           }
                           onClick={() => field.onChange(false)}
+                          className="font-bold px-7"
                         >
                           No
                         </Button>
@@ -155,7 +157,7 @@ export function CreateMeal() {
                   </FormItem>
                 )}
               />
-              <div className="flex justify-end space-x-2">
+              <div className="flex justify-end space-x-4 mt-10">
                 <Button
                   type="button"
                   variant="outline"
