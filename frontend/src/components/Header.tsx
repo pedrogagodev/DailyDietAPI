@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Link } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
+import { ModeToggle } from "./ui/mode-toggle";
 
 export function Header() {
   const { isSignedIn, signout, data } = useAuth();
@@ -15,13 +16,14 @@ export function Header() {
           <p className="font-bold text-xl">Daily Diet</p>
         </div>
       </Link>
+      <ModeToggle />
       {isSignedIn ? (
         <div className="flex gap-4">
           <Avatar className="h-9 w-9">
             <AvatarImage />
             <AvatarFallback>{data?.user?.name[0]}</AvatarFallback>
           </Avatar>
-          <Button onClick={signout} className="mr-6 hover:cursor-pointer">
+          <Button onClick={signout} className="mr-6 hover:cursor-pointer font-bold">
             Sign Out
           </Button>
         </div>
