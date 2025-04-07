@@ -3,7 +3,7 @@ export interface Meal {
   userId: string;
   name: string;
   description: string | null;
-  dateTime: Date;
+  mealTime: string;
   isOnDiet: boolean;
   createdAt: Date;
   updatedAt: Date;
