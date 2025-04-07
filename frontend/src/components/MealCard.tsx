@@ -18,7 +18,7 @@ import {
 } from "./ui/dialog";
 
 interface MealCardProps {
-  dateTime: string;
+  mealTime: string;
   name: string;
   description: string;
   isOnDiet: boolean;
@@ -26,7 +26,7 @@ interface MealCardProps {
 }
 
 export function MealCard({
-  dateTime,
+  mealTime,
   name,
   description,
   isOnDiet,
@@ -62,7 +62,7 @@ export function MealCard({
         <Card className="hover:bg-gray-100 hover:cursor-pointer">
           <CardContent className="flex items-center justify-between">
             <div className="flex gap-4 items-center">
-              <p className="text-sm text-gray-500">{dateTime}</p>
+              <p className="text-sm text-gray-500">{mealTime.slice(0, 5)}</p>
               <div className="flex flex-col gap-2">
                 <h3 className="font-bold">{name}</h3>
                 <p className="text-sm text-gray-500">{description}</p>
@@ -81,7 +81,7 @@ export function MealCard({
           <DialogTitle>{name}</DialogTitle>
           <DialogDescription className="flex flex-col gap-2 items-start">
             <span>{description}</span>
-            <span>Date time: {dateTime}</span>
+            <span>Date time: {mealTime.slice(0, 5)}</span>
             <span>Is on diet? {isOnDiet ? "Yes" : "No"}</span>
           </DialogDescription>
         </DialogHeader>
