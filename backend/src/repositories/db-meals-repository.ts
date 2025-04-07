@@ -12,14 +12,15 @@ export class MethodsMealsRepository implements MealsRepository {
     name,
     description,
     isOnDiet,
+    mealTime,
   }: CreateMealData): Promise<Meal> {
     const result = await query(
       `
-            INSERT INTO meals (user_id, name, description, is_on_diet)
-            VALUES ($1, $2, $3, $4)
+            INSERT INTO meals (user_id, name, description, is_on_diet, meal_time)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING *
             `,
-      [userId, name, description ?? null, isOnDiet]
+      [userId, name, description ?? null, isOnDiet, mealTime]
     );
 
     const meal = result.rows[0];
@@ -28,7 +29,7 @@ export class MethodsMealsRepository implements MealsRepository {
       userId: meal.user_id,
       name: meal.name,
       description: meal.description,
-      dateTime: meal.date_time,
+      mealTime: meal.meal_time,
       isOnDiet: meal.is_on_diet,
       createdAt: meal.created_at,
       updatedAt: meal.updated_at,
@@ -49,7 +50,7 @@ export class MethodsMealsRepository implements MealsRepository {
       userId: meal.user_id,
       name: meal.name,
       description: meal.description,
-      dateTime: meal.date_time,
+      mealTime: meal.meal_time,
       isOnDiet: meal.is_on_diet,
       createdAt: meal.created_at,
       updatedAt: meal.updated_at,
@@ -70,7 +71,7 @@ export class MethodsMealsRepository implements MealsRepository {
       userId: meal.user_id,
       name: meal.name,
       description: meal.description,
-      dateTime: meal.date_time,
+      mealTime: meal.meal_time,
       isOnDiet: meal.is_on_diet,
       createdAt: meal.created_at,
       updatedAt: meal.updated_at,
@@ -92,7 +93,7 @@ export class MethodsMealsRepository implements MealsRepository {
       userId: meal.user_id,
       name: meal.name,
       description: meal.description,
-      dateTime: meal.date_time,
+      mealTime: meal.meal_time,
       isOnDiet: meal.is_on_diet,
       createdAt: meal.created_at,
       updatedAt: meal.updated_at,
@@ -115,7 +116,7 @@ export class MethodsMealsRepository implements MealsRepository {
       userId: meal.user_id,
       name: meal.name,
       description: meal.description,
-      dateTime: meal.date_time,
+      mealTime: meal.meal_time,
       isOnDiet: meal.is_on_diet,
       createdAt: meal.created_at,
       updatedAt: meal.updated_at,
