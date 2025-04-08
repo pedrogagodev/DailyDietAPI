@@ -10,11 +10,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useMealsQuery } from "@/hooks/useMealsQuery";
 import { mealsService } from "@/services/mealsService";
 import { queryClient } from "@/services/query-client";
 import type { EditMealParams } from "@/types/editMeal";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router";
@@ -31,19 +32,21 @@ const editMealSchema = z.object({
 
 export function EditMeal() {
   const navigate = useNavigate();
-  const { data } = useQuery({
-    queryKey: ["me", "listMeals"],
-    queryFn: () => mealsService.listMeals(),
-  });
+  const { data } = useMealsQuery();
   const { mealId } = useParams<{ mealId: string }>();
+
+  const pageWithMeal = data?.pages.find(page =>
+    page.meals.some(meal => meal.id === mealId)
+  );
+  const meal = pageWithMeal?.meals.find(meal => meal.id === mealId);
+
   const form = useForm<z.infer<typeof editMealSchema>>({
     resolver: zodResolver(editMealSchema),
     defaultValues: {
-      name: data?.meals.find(meal => meal.id === mealId)?.name ?? "",
-      description:
-        data?.meals.find(meal => meal.id === mealId)?.description ?? "",
-      isOnDiet: data?.meals.find(meal => meal.id === mealId)?.isOnDiet ?? false,
-      mealTime: data?.meals.find(meal => meal.id === mealId)?.mealTime ?? "",
+      name: meal?.name ?? "",
+      description: meal?.description ?? "",
+      isOnDiet: meal?.isOnDiet ?? false,
+      mealTime: meal?.mealTime.slice(0, 5) ?? "",
     },
   });
 
@@ -53,10 +56,19 @@ export function EditMeal() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["me", "listMeals"],
+        queryKey: ["me", "listMeals", "infinity"],
       });
       queryClient.invalidateQueries({
         queryKey: ["me", "getSequence"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "mealsOnDiet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "mealsOffDiet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "totalMeals"],
       });
     },
   });
@@ -110,7 +122,9 @@ export function EditMeal() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-lg font-bold">Description</FormLabel>
+                    <FormLabel className="text-lg font-bold">
+                      Description
+                    </FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="A simple breakfast with toast, eggs, and coffee"
@@ -142,7 +156,9 @@ export function EditMeal() {
                 name="isOnDiet"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-lg font-bold">Is on diet?</FormLabel>
+                    <FormLabel className="text-lg font-bold">
+                      Is on diet?
+                    </FormLabel>
                     <FormControl>
                       <div className="flex space-x-2">
                         <Button
