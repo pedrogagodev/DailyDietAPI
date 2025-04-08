@@ -1,10 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -92,7 +87,9 @@ export default function Login() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-lg font-bold">Password</FormLabel>
+                    <FormLabel className="text-lg font-bold">
+                      Password
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -115,6 +112,16 @@ export default function Login() {
               </Button>
             </form>
           </Form>
+          <div className="text-center mt-6">
+            Don't have an account?{" "}
+            <Button
+              variant="link"
+              className="text-primary font-bold text-lg"
+              onClick={() => navigate("/register")}
+            >
+              Sign up
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
