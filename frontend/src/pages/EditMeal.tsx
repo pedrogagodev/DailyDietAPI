@@ -71,7 +71,14 @@ export function EditMeal() {
       queryClient.invalidateQueries({
         queryKey: ["me", "totalMeals"],
       });
-      toast.success("Successfully edited");
+      toast.success("Successfully edited", {
+        duration: 3000,
+        style: {
+          border: "1px solid #4caf50",
+          color: "white",
+          backgroundColor: "#4caf50",
+        },
+      });
       navigate("/dashboard");
     },
   });
