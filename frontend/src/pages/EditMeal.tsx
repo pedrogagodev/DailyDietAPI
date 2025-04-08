@@ -71,6 +71,8 @@ export function EditMeal() {
       queryClient.invalidateQueries({
         queryKey: ["me", "totalMeals"],
       });
+      toast.success("Successfully edited");
+      navigate("/dashboard");
     },
   });
 
@@ -83,8 +85,6 @@ export function EditMeal() {
         id: mealId ?? "",
         mealTime: data.mealTime,
       });
-      toast.success("Successfully edited");
-      navigate("/dashboard");
     } catch (error) {
       toast.error("Failed to edit");
     }
