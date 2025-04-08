@@ -77,14 +77,18 @@ export class MethodsMealsRepository implements MealsRepository {
       updatedAt: meal.updated_at,
     };
   }
-  async listByUserId(userId: string): Promise<Meal[]> {
+  async listByUserId(
+    userId: string,
+    options: { limit: number; offset: number } = { limit: 20, offset: 0 }
+  ): Promise<Meal[]> {
     const result = await query(
       `
         SELECT * FROM meals
         WHERE user_id = $1
         ORDER BY created_at DESC
-        `,
-      [userId]
+        LIMIT $2 OFFSET $3
+      `,
+      [userId, options.limit, options.offset]
     );
 
     const meals = result.rows;
