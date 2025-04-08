@@ -60,7 +60,14 @@ export function CreateMeal() {
       queryClient.invalidateQueries({
         queryKey: ["me", "totalMeals"],
       });
-      toast.success("Successfully created");
+      toast.success("Successfully created", {
+        duration: 3000,
+        style: {
+          border: "1px solid #4caf50",
+          color: "white",
+          backgroundColor: "#4caf50",
+        },
+      });
       navigate("/dashboard");
     },
   });
