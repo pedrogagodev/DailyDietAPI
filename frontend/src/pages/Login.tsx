@@ -14,6 +14,7 @@ import { authService } from "@/services/authService";
 import type { LoginParams } from "@/types/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
@@ -54,7 +55,7 @@ export default function Login() {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="min-h-screen flex items-center justify-center">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Sign in</CardTitle>
@@ -124,6 +125,6 @@ export default function Login() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }
