@@ -5,8 +5,6 @@ export const httpClient = axios.create({
   baseURL: env.VITE_API_URL,
 });
 
-console.log("env url:",env.VITE_API_URL);
-
 httpClient.interceptors.request.use(config => {
   const accessToken = localStorage.getItem("@DailyDiet:token");
 
