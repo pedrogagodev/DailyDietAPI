@@ -16,6 +16,7 @@ import { queryClient } from "@/services/query-client";
 import type { EditMealParams } from "@/types/editMeal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router";
@@ -90,7 +91,12 @@ export function EditMeal() {
   });
 
   return (
-    <div className="fixed inset-0 z-20 flex items-center justify-center">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="fixed inset-0 z-20 flex items-center justify-center"
+    >
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
       <div
         className="absolute inset-0 bg-black opacity-50"
@@ -207,6 +213,6 @@ export function EditMeal() {
           </Form>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }
