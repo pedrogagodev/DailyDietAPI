@@ -8,6 +8,7 @@ export const updateMealBodySchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
   isOnDiet: z.boolean().optional(),
+  mealTime: z.string(),
 });
 
 export const updateMealResponseSchema = {
