@@ -12,14 +12,15 @@ export class MethodsMealsRepository implements MealsRepository {
     name,
     description,
     isOnDiet,
+    mealTime,
   }: CreateMealData): Promise<Meal> {
     const result = await query(
       `
-            INSERT INTO meals (user_id, name, description, is_on_diet)
-            VALUES ($1, $2, $3, $4)
+            INSERT INTO meals (user_id, name, description, is_on_diet, meal_time)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING *
             `,
-      [userId, name, description ?? null, isOnDiet]
+      [userId, name, description ?? null, isOnDiet, mealTime]
     );
 
     const meal = result.rows[0];
@@ -28,7 +29,7 @@ export class MethodsMealsRepository implements MealsRepository {
       userId: meal.user_id,
       name: meal.name,
       description: meal.description,
-      dateTime: meal.date_time,
+      mealTime: meal.meal_time,
       isOnDiet: meal.is_on_diet,
       createdAt: meal.created_at,
       updatedAt: meal.updated_at,
@@ -49,7 +50,7 @@ export class MethodsMealsRepository implements MealsRepository {
       userId: meal.user_id,
       name: meal.name,
       description: meal.description,
-      dateTime: meal.date_time,
+      mealTime: meal.meal_time,
       isOnDiet: meal.is_on_diet,
       createdAt: meal.created_at,
       updatedAt: meal.updated_at,
@@ -70,20 +71,24 @@ export class MethodsMealsRepository implements MealsRepository {
       userId: meal.user_id,
       name: meal.name,
       description: meal.description,
-      dateTime: meal.date_time,
+      mealTime: meal.meal_time,
       isOnDiet: meal.is_on_diet,
       createdAt: meal.created_at,
       updatedAt: meal.updated_at,
     };
   }
-  async listByUserId(userId: string): Promise<Meal[]> {
+  async listByUserId(
+    userId: string,
+    options: { limit: number; offset: number } = { limit: 20, offset: 0 }
+  ): Promise<Meal[]> {
     const result = await query(
       `
         SELECT * FROM meals
         WHERE user_id = $1
         ORDER BY created_at DESC
-        `,
-      [userId]
+        LIMIT $2 OFFSET $3
+      `,
+      [userId, options.limit, options.offset]
     );
 
     const meals = result.rows;
@@ -92,7 +97,7 @@ export class MethodsMealsRepository implements MealsRepository {
       userId: meal.user_id,
       name: meal.name,
       description: meal.description,
-      dateTime: meal.date_time,
+      mealTime: meal.meal_time,
       isOnDiet: meal.is_on_diet,
       createdAt: meal.created_at,
       updatedAt: meal.updated_at,
@@ -102,11 +107,17 @@ export class MethodsMealsRepository implements MealsRepository {
     const result = await query(
       `
             UPDATE meals
-            SET name = $1, description = $2, is_on_diet = $3
-            WHERE id = $4
+            SET name = $1, description = $2, is_on_diet = $3, meal_time = $4
+            WHERE id = $5
             RETURNING *
             `,
-      [data.name ?? null, data.description ?? null, data.isOnDiet ?? null, id]
+      [
+        data.name ?? null,
+        data.description ?? null,
+        data.isOnDiet ?? null,
+        data.mealTime ?? "00:00:00",
+        id,
+      ]
     );
 
     const meal = result.rows[0];
@@ -115,7 +126,7 @@ export class MethodsMealsRepository implements MealsRepository {
       userId: meal.user_id,
       name: meal.name,
       description: meal.description,
-      dateTime: meal.date_time,
+      mealTime: meal.meal_time,
       isOnDiet: meal.is_on_diet,
       createdAt: meal.created_at,
       updatedAt: meal.updated_at,

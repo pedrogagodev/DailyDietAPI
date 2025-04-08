@@ -7,6 +7,8 @@ import { UserNotFoundError } from "@/errors/user-not-found";
 interface ListMealsUseCaseRequest {
   userId: string;
   requestingUserId: string;
+  page: number;
+  limit: number;
 }
 
 interface ListMealsUseCaseResponse {
@@ -28,6 +30,8 @@ export class ListMealsUseCase {
   async execute({
     userId,
     requestingUserId,
+    page,
+    limit,
   }: ListMealsUseCaseRequest): Promise<ListMealsUseCaseResponse> {
     if (userId !== requestingUserId) {
       throw new UnauthorizedAccessError();
@@ -39,8 +43,12 @@ export class ListMealsUseCase {
       throw new UserNotFoundError();
     }
 
+    const offset = (page - 1) * limit;
 
-    const meals = await this.mealsRepository.listByUserId(userId);
+    const meals = await this.mealsRepository.listByUserId(userId, {
+      limit,
+      offset,
+    });
 
     return { meals };
   }

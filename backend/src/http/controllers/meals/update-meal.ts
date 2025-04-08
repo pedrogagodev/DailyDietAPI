@@ -9,11 +9,14 @@ type UpdateMealBody = {
   name: string;
   description: string;
   isOnDiet: boolean;
+  mealTime: string;
 };
 
 export async function updateMeal(request: FastifyRequest, reply: FastifyReply) {
   const { mealId } = request.params as UpdateMealParams;
-  const { name, description, isOnDiet } = request.body as UpdateMealBody;
+  console.log(request.body)
+  const { name, description, isOnDiet, mealTime } =
+    request.body as UpdateMealBody;
   const updateMealUseCase = makeUpdateMealUseCase();
 
   const { updatedMeal } = await updateMealUseCase.execute({
@@ -22,11 +25,12 @@ export async function updateMeal(request: FastifyRequest, reply: FastifyReply) {
       name,
       description,
       isOnDiet,
+      mealTime,
     },
     requestingUserId: request.user.sub,
   });
 
   return reply
     .status(200)
-    .send({ meal: { ...updatedMeal, userId: undefined } });
+    .send({ meal: { ...updatedMeal, userId: undefined} });
 }

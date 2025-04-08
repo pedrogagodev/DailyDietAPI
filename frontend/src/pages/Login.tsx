@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -15,8 +9,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/useAuth";
+import { authService } from "@/services/authService";
+import type { LoginParams } from "@/types/login";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { motion } from "motion/react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -33,12 +34,28 @@ export default function Login() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof loginSchema>) => {
-    console.log("Form Data:", data);
-  };
+  const mutation = useMutation({
+    mutationFn: async (data: LoginParams) => {
+      return authService.login(data);
+    },
+  });
+
+  const { signin } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = form.handleSubmit(async data => {
+    try {
+      const { token } = await mutation.mutateAsync(data);
+      signin(token);
+      toast.success("Successfully logged in");
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error("Failed to login");
+    }
+  });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="min-h-screen flex items-center justify-center">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Sign in</CardTitle>
@@ -46,13 +63,13 @@ export default function Login() {
 
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-lg font-bold">Email</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="email@example.com"
@@ -71,7 +88,9 @@ export default function Login() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="text-lg font-bold">
+                      Password
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -85,13 +104,27 @@ export default function Login() {
                 )}
               />
 
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full font-bold text-lg"
+                isLoading={mutation.isPending}
+              >
                 Sign in
               </Button>
             </form>
           </Form>
+          <div className="text-center mt-6">
+            Don't have an account?{" "}
+            <Button
+              variant="link"
+              className="text-primary font-bold text-lg"
+              onClick={() => navigate("/register")}
+            >
+              Sign up
+            </Button>
+          </div>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }

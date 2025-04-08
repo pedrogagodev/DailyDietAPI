@@ -6,6 +6,7 @@ export const createMealBodySchema = z.object({
   isOnDiet: z.boolean({
     message: "Please, provide a valid value for isOnDiet",
   }),
+  mealTime: z.string(),
 });
 
 export const createMealResponseSchema = {
@@ -15,7 +16,7 @@ export const createMealResponseSchema = {
       name: z.string(),
       description: z.string().nullable(),
       isOnDiet: z.boolean(),
-      dateTime: z.date(),
+      mealTime: z.string(),
       createdAt: z.date(),
       updatedAt: z.date(),
     }),

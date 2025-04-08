@@ -26,9 +26,9 @@ describe("Create Meal e2e", () => {
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
-        userId: userId,
         description: "Pizza with cheese and pepperoni",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     expect(response.statusCode).toEqual(201);
@@ -71,6 +71,7 @@ describe("Create Meal e2e", () => {
         name: "Pizza",
         description: "Pizza with cheese and pepperoni",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     expect(response.statusCode).toEqual(404);
@@ -80,20 +81,21 @@ describe("Create Meal e2e", () => {
   });
 
   it("not should to be create meal without name", async () => {
-    const { token, userId } = await createAndAuthenticateUser(app);
+    const { token } = await createAndAuthenticateUser(app);
 
     const response = await request(app.server)
       .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "",
-        userId: userId,
         description: "Pizza with cheese and pepperoni",
         isOnDiet: true,
       });
 
     expect(response.statusCode).toEqual(500); // #TODO: better handle the error to return the correct code
-    expect(response.body.message).toEqual("body/name Please, provide a meal name");
+    expect(response.body.message).toEqual(
+      "body/name Please, provide a meal name, body/mealTime Required"
+    );
   });
 
   it("not should to be create meal without isOnDiet boolean", async () => {
@@ -104,12 +106,14 @@ describe("Create Meal e2e", () => {
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
-        userId: userId,
         description: "Pizza with cheese and pepperoni",
         isOnDiet: null,
+        mealTime: "10:00",
       });
 
     expect(response.statusCode).toEqual(500); // #TODO: better handle the error to return the correct code
-    expect(response.body.message).toEqual("body/isOnDiet Please, provide a valid value for isOnDiet");
+    expect(response.body.message).toEqual(
+      "body/isOnDiet Please, provide a valid value for isOnDiet"
+    );
   });
 });

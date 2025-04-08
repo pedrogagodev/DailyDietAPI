@@ -18,16 +18,16 @@ describe("Get Meal Info e2e", () => {
   });
 
   it("should be able to get meal info", async () => {
-    const { token, userId } = userData;
+    const { token } = userData;
 
     const createMealResponse = await request(app.server)
       .post("/me/meals")
       .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Pizza",
-        userId: userId,
         description: "Pizza with cheese and pepperoni",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     expect(createMealResponse.statusCode).toEqual(201);
@@ -80,6 +80,7 @@ describe("Get Meal Info e2e", () => {
         name: "Pizza",
         description: "Pizza with cheese and pepperoni",
         isOnDiet: true,
+        mealTime: "10:00",
       });
 
     expect(createMealResponse.statusCode).toEqual(201);

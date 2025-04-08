@@ -4,7 +4,6 @@ import type {
   MealsRepository,
 } from "@/core/repositories/meals-repository";
 import type { UsersRepository } from "@/core/repositories/users-repository";
-import { InvalidMealDataError } from "@/errors/invalid-meal-data-error";
 import { UnauthorizedAccessError } from "@/errors/unauthorized-access-error";
 import { UserNotFoundError } from "@/errors/user-not-found";
 interface CreateMealUseCaseResponse {
@@ -25,6 +24,7 @@ export class CreateMealUseCase {
 
   async execute({
     name,
+    mealTime,
     isOnDiet,
     userId,
     description,
@@ -47,6 +47,7 @@ export class CreateMealUseCase {
     const meal = await this.mealsRepository.create({
       name,
       isOnDiet,
+      mealTime,
       userId,
       description,
       requestingUserId,
