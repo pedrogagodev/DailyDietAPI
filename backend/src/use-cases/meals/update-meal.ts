@@ -29,13 +29,21 @@ export class UpdateMealUseCase {
     requestingUserId,
   }: UpdateMealUseCaseRequest): Promise<UpdateMealUseCaseResponse> {
     const meal = await this.mealsRepository.findById(id);
-    
+
     if (!meal) {
       throw new MealNotFoundError();
     }
 
     if (meal.userId !== requestingUserId) {
       throw new UnauthorizedAccessError();
+    }
+
+    if (data.mealTime && data.mealTime.length === 5) {
+      data.mealTime = `${data.mealTime}:00`;
+    }
+
+    if (data.mealTime === null) {
+      data.mealTime = "00:00:00";
     }
 
     const updatedMeal = await this.mealsRepository.update(id, data);
