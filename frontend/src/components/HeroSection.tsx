@@ -1,10 +1,11 @@
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "./ui/button";
+import { motion } from "motion/react";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden py-20 md:py-32">
+    <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="relative overflow-hidden py-20 md:py-32">
       <div className="flex flex-col items-center text-center">
         <div className="inline-block rounded-full bg-primary/10 px-3 py-1 text-sm text-primary mb-6">
           Track your meals, achieve your goals
@@ -25,6 +26,6 @@ export function HeroSection() {
           </Button>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
