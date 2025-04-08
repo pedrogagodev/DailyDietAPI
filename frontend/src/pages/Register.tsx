@@ -23,6 +23,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { z } from "zod";
+import { motion } from 'motion/react'
 
 const registerSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -59,7 +60,7 @@ export default function Register() {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="min-h-screen flex items-center justify-center">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
@@ -146,6 +147,6 @@ export default function Register() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }
