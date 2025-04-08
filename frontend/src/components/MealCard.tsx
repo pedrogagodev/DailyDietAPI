@@ -57,7 +57,14 @@ export function MealCard({
       queryClient.invalidateQueries({
         queryKey: ["me", "totalMeals"],
       });
-      toast.success("Successfully deleted");
+      toast.success("Successfully deleted", {
+        duration: 3000,
+        style: {
+          border: "1px solid #4caf50",
+          color: "white",
+          backgroundColor: "#4caf50",
+        },
+      });
       setIsDialogOpen(false);
     },
   });
