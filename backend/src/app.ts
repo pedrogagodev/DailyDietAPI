@@ -24,7 +24,10 @@ app.setSerializerCompiler(serializerCompiler);
 
 app.setErrorHandler(errorHandler);
 
-app.register(fastifyCors, { origin: "*" });
+app.register(fastifyCors, {
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+});
 
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
