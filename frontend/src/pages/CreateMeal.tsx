@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { z } from "zod";
+import { motion } from "motion/react";
 
 const createMealSchema = z.object({
   name: z.string().min(1, { message: "Please, provide a meal name" }),
@@ -78,7 +79,12 @@ export function CreateMeal() {
   });
 
   return (
-    <div className="fixed inset-0 z-20 flex items-center justify-center">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="fixed inset-0 z-20 flex items-center justify-center"
+    >
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
       <div
         className="absolute inset-0 bg-black opacity-50"
@@ -195,6 +201,6 @@ export function CreateMeal() {
           </Form>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }
