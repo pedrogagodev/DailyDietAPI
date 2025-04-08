@@ -15,11 +15,11 @@ import { queryClient } from "@/services/query-client";
 import type { CreateMealParams } from "@/types/createMeal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { motion } from "motion/react";
 
 const createMealSchema = z.object({
   name: z.string().min(1, { message: "Please, provide a meal name" }),
@@ -60,6 +60,8 @@ export function CreateMeal() {
       queryClient.invalidateQueries({
         queryKey: ["me", "totalMeals"],
       });
+      toast.success("Successfully created");
+      navigate("/dashboard");
     },
   });
 
@@ -71,8 +73,6 @@ export function CreateMeal() {
         isOnDiet: data.isOnDiet,
         mealTime: data.mealTime,
       });
-      toast.success("Successfully created");
-      navigate("/dashboard");
     } catch (error) {
       toast.error("Failed to create");
     }
