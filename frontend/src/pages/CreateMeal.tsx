@@ -45,7 +45,19 @@ export function CreateMeal() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["me", "listMeals"],
+        queryKey: ["me", "listMeals", "infinity"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "getSequence"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "mealsOnDiet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "mealsOffDiet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "totalMeals"],
       });
     },
   });
@@ -98,7 +110,9 @@ export function CreateMeal() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-lg font-bold">Description</FormLabel>
+                    <FormLabel className="text-lg font-bold">
+                      Description
+                    </FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="A simple breakfast with toast, eggs, and coffee"
@@ -130,7 +144,9 @@ export function CreateMeal() {
                 name="isOnDiet"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-lg font-bold">Is on diet?</FormLabel>
+                    <FormLabel className="text-lg font-bold">
+                      Is on diet?
+                    </FormLabel>
                     <FormControl>
                       <div className="flex space-x-4">
                         <Button
