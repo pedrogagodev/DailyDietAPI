@@ -134,6 +134,16 @@ export default function Register() {
               </Button>
             </form>
           </Form>
+          <div className="text-center mt-6">
+            <span>Already have an account?</span>
+            <Button
+              variant="link"
+              className="text-primary font-bold text-lg"
+              onClick={() => navigate("/login")}
+            >
+              Sign in
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
