@@ -48,6 +48,15 @@ export function MealCard({
       queryClient.invalidateQueries({
         queryKey: ["me", "getSequence"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "mealsOnDiet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "mealsOffDiet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "totalMeals"],
+      });
       toast.success("Successfully deleted");
       setIsDialogOpen(false);
     },
@@ -82,30 +91,48 @@ export function MealCard({
       </DialogTrigger>
       <DialogContent className="flex flex-col gap-2 items-start">
         <DialogHeader className="flex flex-col gap-2 items-start">
-          <DialogTitle className="text-xl font-bold mb-4 md:text-2xl">{name}</DialogTitle>
+          <DialogTitle className="text-xl font-bold mb-4 md:text-2xl">
+            {name}
+          </DialogTitle>
           <DialogDescription className="flex flex-col gap-4 items-start">
             <span className="md:text-lg">{description}</span>
-            <span className="md:text-lg"><span className="font-bold">Date time:</span> {mealTime.slice(0, 5)}</span>
-            <span className="md:text-lg"><span className="font-bold">Is on diet:</span> {isOnDiet ? "Yes" : "No"}</span>
+            <span className="md:text-lg">
+              <span className="font-bold">Date time:</span>{" "}
+              {mealTime.slice(0, 5)}
+            </span>
+            <span className="md:text-lg">
+              <span className="font-bold">Is on diet:</span>{" "}
+              {isOnDiet ? "Yes" : "No"}
+            </span>
           </DialogDescription>
         </DialogHeader>
         <div className="flex gap-4 mt-4">
           <DialogClose>
-            <Button onClick={handleClickEdit} className="font-bold md:px-8">Edit</Button>
+            <Button onClick={handleClickEdit} className="font-bold md:px-8">
+              Edit
+            </Button>
           </DialogClose>
           <Dialog>
             <DialogTrigger>
-              <Button variant="destructive" className="font-bold md:px-6">Delete</Button>
+              <Button variant="destructive" className="font-bold md:px-6">
+                Delete
+              </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle className="text-xl font-bold mb-4 md:text-2xl">Delete Meal</DialogTitle>
+                <DialogTitle className="text-xl font-bold mb-4 md:text-2xl">
+                  Delete Meal
+                </DialogTitle>
                 <DialogDescription className="md:text-lg">
                   Are you sure you want to delete this meal?
                 </DialogDescription>
               </DialogHeader>
               <DialogClose className="flex justify-end gap-2 mt-6">
-                <Button variant="destructive" onClick={handleClickDelete} className="font-bold md:px-8">
+                <Button
+                  variant="destructive"
+                  onClick={handleClickDelete}
+                  className="font-bold md:px-8"
+                >
                   Delete
                 </Button>
                 <Button className="font-bold md:px-8">Cancel</Button>
