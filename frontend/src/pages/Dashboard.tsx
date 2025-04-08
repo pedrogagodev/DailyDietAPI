@@ -11,6 +11,7 @@ import { useTotalMeals } from "@/hooks/useTotalMeals";
 import { mealsService } from "@/services/mealsService";
 import type { GetMealsResponse } from "@/types/listMeals";
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "motion/react";
 import { useEffect, useRef } from "react";
 import { Outlet, useNavigate } from "react-router";
 
@@ -90,7 +91,12 @@ export default function Dashboard() {
   ).toFixed(1);
 
   return (
-    <div className="w-full min-h-screen px-4 bg-gray-200 dark:bg-background">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full min-h-screen px-4 bg-gray-200 dark:bg-background"
+    >
       <div className="flex flex-col min-h-screen">
         <div>
           <Card
@@ -100,7 +106,10 @@ export default function Dashboard() {
               <CardTitle>Meals within diet</CardTitle>
             </CardHeader>
             <CardContent className="text-center text-3xl font-bold">
-              {mealsWithinDietPercentage === 'NaN' ? "0" : mealsWithinDietPercentage}%
+              {mealsWithinDietPercentage === "NaN"
+                ? "0"
+                : mealsWithinDietPercentage}
+              %
             </CardContent>
           </Card>
           <div className="w-full">
@@ -179,6 +188,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
