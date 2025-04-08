@@ -67,7 +67,7 @@ export function MealCard({
               </p>
               <div className="flex flex-col gap-2 ml-4">
                 <h3 className="text-lg font-bold">{name}</h3>
-                <p className="text-sm text-gray-500 dark:text-primary ">
+                <p className="text-sm text-gray-500 dark:font-bold">
                   {description}
                 </p>
               </div>
