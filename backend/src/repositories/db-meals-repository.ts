@@ -107,11 +107,17 @@ export class MethodsMealsRepository implements MealsRepository {
     const result = await query(
       `
             UPDATE meals
-            SET name = $1, description = $2, is_on_diet = $3
-            WHERE id = $4
+            SET name = $1, description = $2, is_on_diet = $3, meal_time = $4
+            WHERE id = $5
             RETURNING *
             `,
-      [data.name ?? null, data.description ?? null, data.isOnDiet ?? null, id]
+      [
+        data.name ?? null,
+        data.description ?? null,
+        data.isOnDiet ?? null,
+        data.mealTime ?? "00:00:00",
+        id,
+      ]
     );
 
     const meal = result.rows[0];
