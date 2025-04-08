@@ -20,7 +20,10 @@ export interface MealsRepository {
   create(data: CreateMealData): Promise<Meal>;
   findById(id: string): Promise<Meal | null>;
   findByUserIdAndId(userId: string, id: string): Promise<Meal | null>;
-  listByUserId(userId: string): Promise<Meal[]>;
+  listByUserId(
+    userId: string,
+    { limit, offset }: { limit: number; offset: number }
+  ): Promise<Meal[]>;
   update(id: string, data: UpdateMealData): Promise<Meal>;
   delete(id: string): Promise<void>;
   countByUserId(userId: string): Promise<number>;
