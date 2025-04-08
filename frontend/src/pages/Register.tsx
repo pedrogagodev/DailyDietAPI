@@ -19,16 +19,24 @@ import { authService } from "@/services/authService";
 import type { RegisterParams } from "@/types/register";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { motion } from 'motion/react'
 
 const registerSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Minimum 6 characters required" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters long" })
+    .regex(/[A-Z]/, {
+      message: "Password must contain at least one uppercase letter",
+    })
+    .regex(/[0-9]/, {
+      message: "Password must contain at least one number",
+    }),
 });
 
 export default function Register() {
@@ -60,11 +68,18 @@ export default function Register() {
   });
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="min-h-screen flex items-center justify-center">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen flex items-center justify-center"
+    >
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-          <CardDescription className="text-lg">Start your journey with us today</CardDescription>
+          <CardDescription className="text-lg">
+            Start your journey with us today
+          </CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -75,7 +90,9 @@ export default function Register() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-lg font-bold">Full Name</FormLabel>
+                    <FormLabel className="text-lg font-bold">
+                      Full Name
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="John Doe"
@@ -112,7 +129,9 @@ export default function Register() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-lg font-bold">Password</FormLabel>
+                    <FormLabel className="text-lg font-bold">
+                      Password
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="password"
