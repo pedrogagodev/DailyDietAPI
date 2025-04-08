@@ -1,10 +1,10 @@
+import { randomUUID } from "node:crypto";
 import type { Meal } from "@/core/entities/meal";
 import type {
   CreateMealData,
   MealsRepository,
   UpdateMealData,
 } from "@/core/repositories/meals-repository";
-import { randomUUID } from "node:crypto";
 
 export class InMemoryMealsRepository implements MealsRepository {
   public items: Meal[] = [];
@@ -13,7 +13,7 @@ export class InMemoryMealsRepository implements MealsRepository {
     const meal = {
       id: randomUUID(),
       name: data.name,
-      dateTime: new Date(),
+      mealTime: data.mealTime,
       description: data.description || null,
       isOnDiet: data.isOnDiet,
       userId: data.userId,
